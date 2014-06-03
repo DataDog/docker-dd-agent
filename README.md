@@ -32,15 +32,15 @@ The default setup only report system metrics. You can change parameters in `data
 Example with `Redis`, add to the `Dockerfile`:
 
 ```
-RUN apt-get install datadog-agent -y
+RUN apt-get install python-redis -y
 RUN mv /etc/dd-agent/conf.d/redis.yaml.example /etc/dd-agent/conf.d/redis.yaml
 ```
 
 ## DogStatsD
 
-If you want to run DogStatsD alone, give a look at [datadog-dogstatsd](https://github.com/DataDog/docker-dogstatsd).
+If you want to run DogStatsD alone, give a look at [docker-dogstatsd](https://github.com/DataDog/docker-dogstatsd).
 
-This container also runs DogStatsD, so the documentation from [datadog-dogstatsd](https://github.com/DataDog/docker-dogstatsd/blob/master/README.md) also apply to it.
+This container also runs DogStatsD, so the documentation from [docker-dogstatsd](https://github.com/DataDog/docker-dogstatsd/blob/master/README.md) also apply to it.
 
 
 ## Logs
