@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:wheezy
 
 MAINTAINER Benjamin Fernandes <benjamin@datadoghq.com>
 
