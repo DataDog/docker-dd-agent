@@ -21,7 +21,9 @@ RUN sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" /etc/dd-agent/
 # Turn off syslog
 RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf
 
+ADD bin/agent.sh /usr/local/bin/agent.sh
+
 # Expose DogStatsD port
 EXPOSE 8125/udp
 
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
+CMD [ "/usr/local/bin/agent.sh" ]
