@@ -2,7 +2,6 @@
 
 This repository is meant to build the base image for a Datadog Agent container. You will have to use the resulting image to configure and run the Agent.
 
-Warning: Inside a container, the Datadog Agent is restricted. Some metrics won't be reported, some integration won't work. More information in our wiki: [Datadog Agent Docker container](https://github.com/DataDog/dd-agent/wiki/Docker-Containers).
 
 ## Quick Start
 
@@ -32,15 +31,17 @@ Build it.
 
 Then run it like the `datadog/docker-dd-agent` image.
 
-`
+```
 docker run -d --privileged --name dd-agent -h `hostname` -e API_KEY=apikey_3 dd-agent-image
-`
+```
+
+You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/master/examples) in our Github repository.
 
 ## DogStatsD
 
 If you want to run DogStatsD alone, give a look at [docker-dogstatsd](https://github.com/DataDog/docker-dogstatsd).
 
-This container also runs DogStatsD, so the documentation from [docker-dogstatsd](https://github.com/DataDog/docker-dogstatsd/blob/master/README.md) also apply to it.
+This container also runs DogStatsD, so look at the documentation from [docker-dogstatsd](https://github.com/DataDog/docker-dogstatsd/blob/master/README.md) to know how to make it work.
 
 
 ## Logs
@@ -80,3 +81,13 @@ You can set logging to DEBUG verbosity by adding to your `Dockerfile`:
 RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
 ```
 
+## Limitations
+
+**WARNING**: Even with the `--privileged` flag, the Agent won't have access to some metrics or events.
+
+Metrics such as CPU, network or process memory usage may be restricted to the container. Some integrations (such as Docker, Gunicorn, MySQL, Postfix or Varnish) could be broken too.
+
+
+## Contribute
+
+If you notice a limitation or a bug with this container, feel free to open a [Github issue](https://github.com/DataDog/docker-dd-agent/issues). If it concerns the Agent itself, please refer to its [documentation](http://docs.datadoghq.com/) or its [wiki](https://github.com/DataDog/dd-agent/wiki).
