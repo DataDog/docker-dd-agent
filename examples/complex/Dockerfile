@@ -6,5 +6,3 @@ FROM datadog/docker-dd-agent
 
 # Add a constom datadog.conf
 ADD datadog.conf /etc/dd-agent/datadog.conf
-# Update network check configuration
-ADD network.yaml /etc/dd-agent/conf.d/network.yaml
