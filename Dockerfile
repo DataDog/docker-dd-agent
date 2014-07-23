@@ -24,6 +24,11 @@ RUN sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.c
 # Remove dd-agent user from supervisor configuration
 RUN sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf
 
+# Remove network check
+RUN rm /etc/dd-agent/conf.d/network.yaml
+# Add Docker check
+ADD conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
+
 # Expose DogStatsD port
 EXPOSE 8125/udp
 
