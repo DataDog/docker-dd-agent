@@ -12,9 +12,6 @@ RUN apt-get update
 # Install the Agent
 RUN apt-get install datadog-agent -qq --no-install-recommends
 
-# Free space
-RUN apt-get clean
-
 # Configure the Agent
 RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf
 # Listen to statsd from other containers
