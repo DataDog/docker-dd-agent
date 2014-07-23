@@ -5,10 +5,10 @@ This repository is meant to build the base image for a Datadog Agent container. 
 
 ## Quick Start
 
-The default image is ready-to-go, you just need to set your hostname and API_KEY in the environment. Don't forget to set the `--privileged` flag to get host metrics.
+The default image is ready-to-go, you just need to set your hostname and API_KEY in the environment. Don't forget to set the `--privileged` flag and to mount some directories to get host metrics.
 
 ```
-docker run -d --privileged --name dd-agent -h `hostname` -e API_KEY=apikey_3 datadog/docker-dd-agent
+docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY=apikey_3 datadog/docker-dd-agent
 ```
 
 ## Configuration
@@ -22,7 +22,7 @@ FROM datadog/docker-dd-agent
 
 # Example: MySQL
 RUN apt-get install python-mysqldb -qq --no-install-recommends
-ADD mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
+ADD conf.d/mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
 ```
 
 Build it.
@@ -32,7 +32,7 @@ Build it.
 Then run it like the `datadog/docker-dd-agent` image.
 
 ```
-docker run -d --privileged --name dd-agent -h `hostname` -e API_KEY=apikey_3 dd-agent-image
+docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY=apikey_3 dd-agent-image
 ```
 
 You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/master/examples) in our Github repository.
@@ -85,7 +85,11 @@ RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
 
 **WARNING**: Even with the `--privileged` flag, the Agent won't have access to some metrics or events.
 
-Metrics such as CPU, network or process memory usage may be restricted to the container. Some integrations (such as Docker, Gunicorn, MySQL, Postfix or Varnish) could be broken too.
+Known missing/incorrect metrics:
+
+* Network
+* Process list
+* CPU
 
 
 ## Contribute
