@@ -21,7 +21,6 @@ Create a `Dockerfile` to set your specific configuration or to install dependenc
 FROM datadog/docker-dd-agent
 
 # Example: MySQL
-RUN apt-get install python-mysqldb -qq --no-install-recommends
 ADD conf.d/mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
 ```
 
