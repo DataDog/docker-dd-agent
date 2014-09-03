@@ -32,5 +32,7 @@ EXPOSE 8125/udp
 ADD run-dd-agent.sh /usr/local/bin/run-dd-agent.sh
 RUN chmod +x /usr/local/bin/run-dd-agent.sh
 
+# Hotfix: Fix Docker 1.2 compatibility until next Agent release
+RUN sed -i -e"s/self.should_get_size = True/self.should_get_size = False/" /opt/datadog-agent/agent/checks.d/docker.py
 
 CMD ["/usr/local/bin/run-dd-agent.sh"]
