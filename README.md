@@ -82,7 +82,7 @@ RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
 
 ## Tags
 
-To set host tags use the ``TAGS`` environment variable. Add ``-e TAGS="my-host-tag-1, another-tag"`` to the docker run command.
+To set host tags use the ``TAGS`` environment variable. Add `-e TAGS="mytag0, mytag1"` to the docker run command.
 
 
 ## Limitations
