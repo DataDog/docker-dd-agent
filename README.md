@@ -80,6 +80,11 @@ You can set logging to DEBUG verbosity by adding to your `Dockerfile`:
 RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
 ```
 
+## Tags
+
+To set host tags use the ``TAGS`` environment variable. Add ``-e TAGS="my-host-tag-1, another-tag"`` to the docker run command.
+
+
 ## Limitations
 
 **WARNING**: Even with the `--privileged` flag, the Agent won't have access to some metrics or events.
