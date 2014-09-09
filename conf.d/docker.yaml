@@ -3,3 +3,4 @@ init_config:
 
 instances:
     - url: "unix://var/run/docker.sock"
+      #max_containers: 20
