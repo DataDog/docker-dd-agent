@@ -52,7 +52,7 @@ Because the Agent is running inside a container, Agent logs aren't direclty acce
 
 That's the simplest solution. It imports container's log to one's host directory.
 
-`docker cp dd-agent:/var/log/datadog-agent /tmp/log-datadog-agent`
+`docker cp dd-agent:/var/log/datadog /tmp/log-datadog-agent`
 
 ### Supervisor logs
 
