@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+#set -e
 
 if [[ $API_KEY ]]; then
 	sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /etc/dd-agent/datadog.conf
