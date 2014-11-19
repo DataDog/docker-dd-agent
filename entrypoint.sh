@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [[ $API_KEY ]]; then
 	sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /etc/dd-agent/datadog.conf
@@ -13,4 +14,4 @@ fi
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
-exec supervisord -n -c /etc/dd-agent/supervisor.conf
+exec "$@"
