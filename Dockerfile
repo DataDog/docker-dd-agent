@@ -3,7 +3,7 @@ FROM debian:wheezy
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.0.5-523
+ENV AGENT_VERSION 1:5.1.0-539
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
@@ -25,8 +25,6 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
 # Add Docker check
 COPY conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
 
-# Hotfix: Fix Docker 1.2 compatibility until next Agent release
-RUN sed -i -e"s/self.should_get_size = True/self.should_get_size = False/" /opt/datadog-agent/agent/checks.d/docker.py
 COPY entrypoint.sh /entrypoint.sh
 
 # Expose DogStatsD port
