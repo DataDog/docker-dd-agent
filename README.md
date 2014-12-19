@@ -11,13 +11,24 @@ The default image is ready-to-go, you just need to set your hostname and API_KEY
 docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
 ```
 
+
 ## Usage
 
 **Warning**: some procedures use `docker exec`, a command available only with Docker 1.3 and above.
 
+
 ### Configuration
 
-To configure the Agent, you will need to build a Docker image on top of our image.
+#### Environment variables
+
+A few parameters can be changed with environement variables.
+
+* `TAGS` set host tags. Add `-e TAGS="mytag0,mytag1"` to use [mytag0, mytag1] as host tags.
+* `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
+
+#### Build an image
+
+To configure integrations or custom checks, you will need to build a Docker image on top of our image.
 
 1. Create a `Dockerfile` to set your specific configuration or to install dependencies.
 
@@ -41,12 +52,10 @@ docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock
 
 You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/master/examples) in our Github repository.
 
-As a shortcut, you can use the `TAGS` environment variable to set host tags. Add `-e TAGS="mytag0,mytag1"` to the `docker run` command.
-
 
 ### Information
 
-You can display the information page with this command.
+To display information about the Agent's state with this command.
 
 `docker exec dd-agent service datadog-agent info`
 
@@ -65,28 +74,24 @@ Basic information about the Agent execution are available through the `logs` com
 
 `docker logs dd-agent`
 
-#### Logging verbosity
-
-You can set logging to DEBUG verbosity by adding this line to your `Dockerfile`.
-
-```
-RUN sed -i -e"s/^.*log_level:.*$/log_level: DEBUG/" /etc/dd-agent/datadog.conf
-```
-
 
 ## DogStatsD
 
-If you want to run DogStatsD alone, add the command `dogstatsd` at the end of the `docker run` command.
+To run DogStatsD without the full Agent, add the command `dogstatsd` at the end of the `docker run` command.
 
 ```
 docker run -d --privileged --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent dogstatsd
 ```
 
+Previous usage commands work, but there are some simpler ones when DogStatsD is running apart.
+
+
 ### Information
 
-While the command for the Agent will work, you can display dogstatsd-only information with this command.
+To display dogstatsd-only information.
 
 `docker exec dogstatsd dogstatsd info`
+
 
 ### Logs
 

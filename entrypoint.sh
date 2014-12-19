@@ -12,6 +12,10 @@ if [[ $TAGS ]]; then
 	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $LOG_LEVEL ]]; then
+    sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/dd-agent/datadog.conf
+fi
+
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 exec "$@"
