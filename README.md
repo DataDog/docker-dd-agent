@@ -11,64 +11,59 @@ The default image is ready-to-go, you just need to set your hostname and API_KEY
 docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
 ```
 
+## Configuration
 
-## Usage
-
-**Warning**: some procedures use `docker exec`, a command available only with Docker 1.3 and above.
-
-
-### Configuration
-
-#### Environment variables
+### Environment variables
 
 A few parameters can be changed with environement variables.
 
 * `TAGS` set host tags. Add `-e TAGS="mytag0,mytag1"` to use [mytag0, mytag1] as host tags.
 * `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
 
-#### Build an image
+### Build an image
 
 To configure integrations or custom checks, you will need to build a Docker image on top of our image.
 
 1. Create a `Dockerfile` to set your specific configuration or to install dependencies.
 
-```
-FROM datadog/docker-dd-agent
-# Example: MySQL
-ADD conf.d/mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
-```
+    ```
+    FROM datadog/docker-dd-agent
+    # Example: MySQL
+    ADD conf.d/mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
+    ```
 
 2. Build it.
 
-`docker build -t dd-agent-image .`
+    `docker build -t dd-agent-image .`
 
 3. Then run it like the `datadog/docker-dd-agent` image.
 
-```
-docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
-```
+    ```
+    docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
+    ```
 
 4. It's done!
 
 You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/master/examples) in our Github repository.
 
 
-### Information
+## Information
 
 To display information about the Agent's state with this command.
 
 `docker exec dd-agent service datadog-agent info`
 
+Warning: the `docker exec` command is available only with Docker 1.3 and above.
 
-### Logs
+## Logs
 
-#### Copy logs from the container to the host
+### Copy logs from the container to the host
 
 That's the simplest solution. It imports container's log to one's host directory.
 
 `docker cp dd-agent:/var/log/datadog /tmp/log-datadog-agent`
 
-#### Supervisor logs
+### Supervisor logs
 
 Basic information about the Agent execution are available through the `logs` command.
 
@@ -85,17 +80,11 @@ docker run -d --privileged --name dogstatsd -h `hostname` -v /var/run/docker.soc
 
 Previous usage commands work, but there are some simpler ones when DogStatsD is running apart.
 
-
-### Information
-
 To display dogstatsd-only information.
 
 `docker exec dogstatsd dogstatsd info`
 
-
-### Logs
-
-The previous methods will work, but this one is simpler when you run DogStatsD alone.
+To display dogstatsd-only logs.
 
 `docker logs dogstatsd`
 
