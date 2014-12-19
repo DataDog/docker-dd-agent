@@ -102,13 +102,14 @@ The previous methods will work, but this one is simpler when you run DogStatsD a
 
 ## Limitations
 
-**WARNING**: Even with the `--privileged` flag, the Agent won't have access to some metrics or events.
+Docker isolates containers from the host. As a result, the Agent won't have access to some metrics.
 
 Known missing/incorrect metrics:
 
 * Network
 * Process list
-* CPU
+
+Also, several integrations might be incomplete. See the "Contribute" section.
 
 
 ## Contribute
