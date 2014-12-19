@@ -72,6 +72,8 @@ Basic information about the Agent execution are available through the `logs` com
 
 ## DogStatsD
 
+### Standalone DogStatsD
+
 To run DogStatsD without the full Agent, add the command `dogstatsd` at the end of the `docker run` command.
 
 ```
@@ -87,6 +89,27 @@ To display dogstatsd-only information.
 To display dogstatsd-only logs.
 
 `docker logs dogstatsd`
+
+### DogStatsD from the host
+
+DogStatsD can be available on port 8125 from anywhere by adding the option `-p 8125:8215` to the `docker run` command.
+
+To make it available from your host only, use `-p 127.0.0.1:8125:8215` instead.
+
+### DogStatsD from other containers
+
+To send data to DogStatsD from other containers, add a `--link dogstatsd:dogstatsd` option to your run command.
+
+For example, run a container `my_container` with the image `my_image`.
+
+```
+docker run  --name my_container           \
+            --all_your_flags              \
+            --link dogstatsd:dogstatsd    \
+            my_image
+```
+
+DogStatsD address and port will be available in `my_container`'s environment variables `DOGSTATSD_PORT_8125_UDP_ADDR` and `DOGSTATSD_PORT_8125_UDP_PORT`.
 
 
 ## Limitations
