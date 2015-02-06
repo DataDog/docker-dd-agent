@@ -99,9 +99,9 @@ To display dogstatsd-only logs.
 
 ### DogStatsD from the host
 
-DogStatsD can be available on port 8125 from anywhere by adding the option `-p 8125:8125` to the `docker run` command.
+DogStatsD can be available on port 8125 from anywhere by adding the option `-p 8125:8125/udp` to the `docker run` command.
 
-To make it available from your host only, use `-p 127.0.0.1:8125:8215` instead.
+To make it available from your host only, use `-p 127.0.0.1:8125:8125/udp` instead.
 
 ### DogStatsD from other containers
 
