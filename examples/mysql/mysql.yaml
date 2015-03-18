@@ -1,7 +1,7 @@
 init_config:
 
 instances:
-  - server: localhost
+  - server: 172.17.42.1
     user: datadog
     pass: password
     tags:

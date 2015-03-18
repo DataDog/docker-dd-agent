@@ -106,6 +106,8 @@ To make it available from your host only, use `-p 127.0.0.1:8125:8125/udp` inste
 
 ### DogStatsD from other containers
 
+#### Using Docker links
+
 To send data to DogStatsD from other containers, add a `--link dogstatsd:dogstatsd` option to your run command.
 
 For example, run a container `my_container` with the image `my_image`.
@@ -118,6 +120,10 @@ docker run  --name my_container           \
 ```
 
 DogStatsD address and port will be available in `my_container`'s environment variables `DOGSTATSD_PORT_8125_UDP_ADDR` and `DOGSTATSD_PORT_8125_UDP_PORT`.
+
+#### Using Docker host IP
+
+Since the Agent container port 8125 should be linked to the host directly, you can connect to DogStatsD though the host. By default, the IP of the host in a Docker container is `172.17.42.1`. So you can configure your DogStatsD client to connect to `172.17.42.1:8125`.
 
 
 ## Limitations
