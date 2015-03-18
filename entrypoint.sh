@@ -24,6 +24,14 @@ if [[ $PROXY_PORT ]]; then
     sed -i -e "s/^# proxy_port:.*$/proxy_port: ${PROXY_PORT}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $PROXY_USER ]]; then
+    sed -i -e "s/^# proxy_user:.*$/proxy_user: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $PROXY_PASSWORD ]]; then
+    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
+fi
+
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 exec "$@"
