@@ -26,6 +26,7 @@ A few parameters can be changed with environment variables.
 
 * `TAGS` set host tags. Add `-e TAGS="mytag0,mytag1"` to use [mytag0, mytag1] as host tags.
 * `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
+* `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 
 ### Build an image
 
