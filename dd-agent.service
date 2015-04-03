@@ -3,6 +3,10 @@ Description=Datadog Agent
 After=docker.service
 
 [Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker stop dd-agent
+ExecStartPre=-/usr/bin/docker rm -f dd-agent
+ExecStartPre=/usr/bin/docker pull datadog/docker-dd-agent
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill dd-agent
 ExecStartPre=-/usr/bin/docker rm dd-agent
