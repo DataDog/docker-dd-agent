@@ -1,0 +1,19 @@
+[Unit]
+Description=Datadog Agent
+After=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill dd-agent
+ExecStartPre=-/usr/bin/docker rm dd-agent
+ExecStart=/usr/bin/bash -c \
+"/usr/bin/docker run --privileged --name dd-agent -h `hostname` \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /proc/mounts:/host/proc/mounts:ro \
+-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+-e API_KEY=`etcdctl get /ddapikey` \
+datadog/docker-dd-agent"
+ExecStop=/usr/bin/docker stop dd-agent
+
+[X-Fleet]
+Global=true
