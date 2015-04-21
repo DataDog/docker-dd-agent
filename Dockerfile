@@ -31,6 +31,9 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
 # Add Docker check
 COPY conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
 
+# Apply Docker backports
+COPY docker.py /etc/dd-agent/checks.d/docker.py
+
 COPY entrypoint.sh /entrypoint.sh
 
 # Expose DogStatsD port
