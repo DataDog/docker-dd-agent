@@ -1,0 +1,12 @@
+init_config:
+
+instances:
+  # If you want to check the number of open connections, set
+  # collect_connection_state to true
+  - collect_connection_state: false
+    excluded_interfaces:
+      - lo
+      - lo0
+      - docker0
+    # Ignore Docker's virtual interfaces:
+    excluded_interface_re: veth*
