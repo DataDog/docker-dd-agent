@@ -4,20 +4,17 @@ After=docker.service
 
 [Service]
 Restart=always
-ExecStartPre=-/usr/bin/docker stop dd-agent
-ExecStartPre=-/usr/bin/docker rm -f dd-agent
-ExecStartPre=/usr/bin/docker pull datadog/docker-dd-agent
-TimeoutStartSec=0
-ExecStartPre=-/usr/bin/docker kill dd-agent
-ExecStartPre=-/usr/bin/docker rm dd-agent
+TimeoutStartSec=20m
+ExecStartPre=-/usr/bin/docker rm -f -v dd-agent
+ExecStartPre=-/usr/bin/docker pull datadog/docker-dd-agent
 ExecStart=/usr/bin/bash -c \
-"/usr/bin/docker run --privileged --name dd-agent -h `hostname` \
+"/usr/bin/docker run --privileged --name dd-agent --net=host \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /proc/mounts:/host/proc/mounts:ro \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
--e API_KEY=`etcdctl get /ddapikey` \
+-e API_KEY=`etcdctl --no-sync get /ddapikey` \
 datadog/docker-dd-agent"
-ExecStop=/usr/bin/docker stop dd-agent
+ExecStop=/usr/bin/docker kill dd-agent
 
 [X-Fleet]
 Global=true
