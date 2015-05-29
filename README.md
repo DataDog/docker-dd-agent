@@ -5,7 +5,7 @@ This repository is meant to build the base image for a Datadog Agent container. 
 
 ## Quick Start
 
-The default image is ready-to-go. You just need to set your hostname and API_KEY in the environment. Don't forget to set the `--privileged` flag and to mount some directories to get host metrics.
+The default image is ready-to-go. You just need to set your hostname and API_KEY in the environment.
 
 ```
 docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
@@ -47,7 +47,7 @@ To configure integrations or custom checks, you will need to build a Docker imag
 3. Then run it like the `datadog/docker-dd-agent` image.
 
     ```
-    docker run -d --privileged --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
+    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
     ```
 
 4. It's done!
@@ -85,7 +85,7 @@ Basic information about the Agent execution are available through the `logs` com
 To run DogStatsD without the full Agent, add the command `dogstatsd` at the end of the `docker run` command.
 
 ```
-docker run -d --privileged --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent dogstatsd
+docker run -d --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent dogstatsd
 ```
 
 Usage commands work, but we added simpler ones when DogStatsD is running on its own.
