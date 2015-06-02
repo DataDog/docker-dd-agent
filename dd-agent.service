@@ -11,7 +11,7 @@ TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill dd-agent
 ExecStartPre=-/usr/bin/docker rm dd-agent
 ExecStart=/usr/bin/bash -c \
-"/usr/bin/docker run --privileged --name dd-agent -h `hostname` \
+"/usr/bin/docker run --name dd-agent -h `hostname` \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /proc/mounts:/host/proc/mounts:ro \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
