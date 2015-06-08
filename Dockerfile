@@ -3,7 +3,10 @@ FROM debian:wheezy
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.3.0-1
+ENV AGENT_VERSION 1:5.3.2-1
+
+# Update the base image
+RUN apt-get update && apt-get -y dist-upgrade
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
