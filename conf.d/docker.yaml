@@ -21,7 +21,7 @@ instances:
     new_tag_names: true
 
     # Tag metrics with the command running inside the container.
-    # tag_by_command: false
+    tag_by_command: true
 
     # You can add extra tags to your Docker metrics with the tags list option. Default: [].
     # Example:
@@ -50,21 +50,25 @@ instances:
     #
     # include: []
     # exclude: []
+    exclude:
+        - "sumologic"
+        - "mesos.*"
+        - "dd-agent*"
 
     # Create events whenever a container status change.
     #
-    # collect_events: true
+    collect_events: true
 
     # Collect disk usage per container with docker.disk.size metric.
     # Warning: This feature is broken in some version of Docker (such as 1.2).
     # Test it before running it in production.
     #
-    # collect_container_size: false
+    collect_container_size: true
 
     # Collect uncommon metrics from cgroups.
     # Collect all the available cgroups metrics. All the relevant metrics are collected by default.
     #
-    # collect_all_metrics: false
+    collect_all_metrics: true
 
     # Collect images stats
     # Number of available active images and intermediate images as gauges. Default: true.
