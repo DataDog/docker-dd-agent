@@ -50,10 +50,6 @@ instances:
     #
     # include: []
     # exclude: []
-    exclude:
-        - "sumologic"
-        - "mesos.*"
-        - "dd-agent*"
 
     # Create events whenever a container status change.
     #
