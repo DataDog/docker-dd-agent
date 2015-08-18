@@ -25,7 +25,6 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf \
  && sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
- && sed -i -e"s/# log_level: INFO/log_level: DEBUG/" /etc/dd-agent/datadog.conf \
  && chmod +x /etc/init.d/datadog-agent \
  && rm /etc/dd-agent/conf.d/network.yaml.default
 
