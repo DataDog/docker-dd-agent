@@ -32,7 +32,8 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
 # Add Docker check
 COPY conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
 
-# Add Mesos slave check
+# Add Mesos master/slave check
+COPY conf.d/mesos_master.yaml /etc/dd-agent/conf.d/mesos_master.yaml
 COPY conf.d/mesos_slave.yaml /etc/dd-agent/conf.d/mesos_slave.yaml
 
 # Debug supervisor.conf
