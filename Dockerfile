@@ -33,7 +33,6 @@ COPY conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
 
 # Add Mesos slave check
 COPY conf.d/mesos_slave.yaml /etc/dd-agent/conf.d/mesos_slave.yaml
-RUN sed -i -e"s/localhost/172.17.42.1/" /etc/dd-agent/conf.d/mesos_slave.yaml
 
 COPY entrypoint.sh /entrypoint.sh
 
