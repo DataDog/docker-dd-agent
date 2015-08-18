@@ -34,4 +34,7 @@ fi
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
+ip addr ls
+ip ro ls
+
 exec "$@"
