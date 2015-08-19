@@ -16,6 +16,10 @@ if [[ $LOG_LEVEL ]]; then
     sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $DD_URL ]]; then
+  sed -i -e "s/^.*dd_url:.*$/dd_url: ${DD_URL}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $PROXY_HOST ]]; then
     sed -i -e "s/^# proxy_host:.*$/proxy_host: ${PROXY_HOST}/" /etc/dd-agent/datadog.conf
 fi
