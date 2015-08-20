@@ -35,7 +35,10 @@ COPY conf.d/docker.yaml /etc/dd-agent/conf.d/docker.yaml
 COPY conf.d/mesos_master.yaml /etc/dd-agent/conf.d/mesos_master.yaml
 COPY conf.d/mesos_slave.yaml /etc/dd-agent/conf.d/mesos_slave.yaml
 
-# Debug supervisor.conf
+# Add Marathon check
+COPY conf.d/marathon.yaml /etc/dd-agent/conf.d/marathon.yaml
+
+# Allow http access to supervisor
 COPY supervisor.conf /etc/dd-agent/supervisor.conf
 
 COPY entrypoint.sh /entrypoint.sh

@@ -32,9 +32,10 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
 fi
 
-export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
+if [[ $MARATHON_URL ]]; then
+    sed -i -e 's/# - url: "marathon_url"/- url: "${MARATHON_URL}"/' /etc/dd-agent/conf.d/marathon.yaml
+fi
 
-ip addr ls
-ip ro ls
+export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 exec "$@"
