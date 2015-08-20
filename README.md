@@ -14,7 +14,7 @@ docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/doc
 If you are running on Amazon Linux, use the following instead:
 
 ```
-docker run -d --name dd-agent -h hostname -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
+docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
 datadog/docker-dd-agent
 ```
 
