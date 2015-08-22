@@ -38,6 +38,9 @@ COPY conf.d/mesos_slave.yaml /etc/dd-agent/conf.d/mesos_slave.yaml
 # Add Marathon check
 COPY conf.d/marathon.yaml /etc/dd-agent/conf.d/marathon.yaml
 
+# Add Zookeeper check
+COPY conf.d/zk.yaml /etc/dd-agent/conf.d/zk.yaml
+
 # Allow http access to supervisor
 COPY supervisor.conf /etc/dd-agent/supervisor.conf
 
