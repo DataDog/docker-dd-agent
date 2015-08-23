@@ -1,5 +1,7 @@
 # Datadog Agent Dockerfile
 
+[![Join the chat at https://gitter.im/DataDog/docker-dd-agent](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/DataDog/docker-dd-agent?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This repository is meant to build the base image for a Datadog Agent container. You will have to use the resulting image to configure and run the Agent.
 
 
