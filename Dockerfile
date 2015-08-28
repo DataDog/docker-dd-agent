@@ -3,10 +3,10 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.4.3-1
+ENV AGENT_VERSION 1:5.4.5-1
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+RUN echo "deb http://apt.datadoghq.com/ docker main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
  && apt-get update \
  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
