@@ -15,7 +15,7 @@ ExecStart=/usr/bin/bash -c \
 -v /var/run/docker.sock:/var/run/docker.sock \
 -v /proc/mounts:/host/proc/mounts:ro \
 -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
--e API_KEY=`etcdctl get /ddapikey` \
+-e API_KEY=`etcdctl get /datadog/apikey` \
 datadog/docker-dd-agent"
 ExecStop=/usr/bin/docker stop dd-agent
 
