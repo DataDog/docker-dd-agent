@@ -18,6 +18,19 @@ docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/doc
 datadog/docker-dd-agent
 ```
 
+## Versioning
+
+As per Agent 5.5.0. The docker image is following a new versioning pattern to allow us to release changes to the Docker image of the Datadog Agent but with the same version of the Agent.
+
+The Docker image version will have the following pattern:
+
+`X.Y.Z` where X is the major version of the Docker Image, Y is the minor version, Z will represent the Agent version.
+
+e.g. the first version of the Docker image that will bundle the Datadog Agent 5.5.0 will be:
+```
+10.0.550
+```
+
 ## Configuration
 
 ### Environment variables
