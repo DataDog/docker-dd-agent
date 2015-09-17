@@ -8,14 +8,27 @@ This repository is meant to build the base image for a Datadog Agent container. 
 The default image is ready-to-go. You just need to set your hostname and API_KEY in the environment.
 
 ```
-docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
+docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
 ```
 
 If you are running on Amazon Linux, use the following instead:
 
 ```
-docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
+docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
 datadog/docker-dd-agent
+```
+
+## Versioning
+
+As per Agent 5.5.0. The docker image is following a new versioning pattern to allow us to release changes to the Docker image of the Datadog Agent but with the same version of the Agent.
+
+The Docker image version will have the following pattern:
+
+`X.Y.Z` where X is the major version of the Docker Image, Y is the minor version, Z will represent the Agent version.
+
+e.g. the first version of the Docker image that will bundle the Datadog Agent 5.5.0 will be:
+```
+10.0.550
 ```
 
 ## Configuration
