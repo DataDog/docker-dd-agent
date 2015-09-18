@@ -28,11 +28,19 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  && chmod +x /etc/init.d/datadog-agent \
  && rm /etc/dd-agent/conf.d/network.yaml.default
 
+# Enable remote supervisor connections
+COPY supervisor.conf /etc/dd-agent/supervisor.conf
+
 # Add Docker check
 COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 
+# Add Kubernetes check
+COPY conf.d/kubernetes.yaml /etc/dd-agent/conf.d/kubernetes.yaml
+
 COPY entrypoint.sh /entrypoint.sh
 
+# Expose supervisor port
+EXPOSE 9001/tcp
 # Expose DogStatsD port
 EXPOSE 8125/udp
 
