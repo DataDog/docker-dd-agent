@@ -14,3 +14,5 @@ init_config:
   #
   # Do you want container names as tags?
   # publish_container_names: false
+
+instances: [{"foo": "bar"}]
