@@ -64,7 +64,7 @@ Now when the container starts, all files in ``/opt/dd-agent-conf.d` with a `.yam
 
 ### Build an image
 
-To configure integrations or custom checks, you will need to build a Docker image on top of this image.
+To configure custom checks, or setup integrations straight in the image, you will need to build a Docker image on top of this image.
 
 1. Create a `Dockerfile` to set your specific configuration or to install dependencies.
 
