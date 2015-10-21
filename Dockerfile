@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.6.0.git.90.43b9c14-1
+ENV AGENT_VERSION 1:5.6.0.git.91.1c6bb95-1
 
 # Install the Agent
 RUN echo "deb http://apt.datad0g.com/ kubernetes main" > /etc/apt/sources.list.d/datadog.list \
