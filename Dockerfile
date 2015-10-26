@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.5.1-1
+ENV AGENT_VERSION 1:5.5.2-1
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ docker main" > /etc/apt/sources.list.d/datadog.list \
