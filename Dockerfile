@@ -43,6 +43,5 @@ COPY entrypoint.sh /entrypoint.sh
 EXPOSE 9001/tcp
 # Expose DogStatsD port
 EXPOSE 8125/udp
-
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
