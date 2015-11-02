@@ -5,6 +5,7 @@ MAINTAINER Datadog <package@datadoghq.com>
 ENV DOCKER_DD_AGENT yes
 ENV AGENT_VERSION 1:5.6.0.git.103.f8d3296-1
 
+
 # Install the Agent
 RUN echo "deb http://apt.datad0g.com/ kubernetes main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
