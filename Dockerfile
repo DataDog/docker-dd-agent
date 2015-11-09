@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.6.0-1
+ENV AGENT_VERSION 1:5.7.0.git.40.9beb558-1
 
 
 # Install the Agent
