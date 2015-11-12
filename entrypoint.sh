@@ -38,6 +38,8 @@ fi
 
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
+find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
+
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 exec "$@"
