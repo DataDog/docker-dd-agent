@@ -44,9 +44,9 @@ A few parameters can be changed with environment variables.
 
 ### Enabling integrations
 
-To enable integrations you can write your YAML configuration files in the `/conf.d` folder, they will automatically be copied to `/etc/dd-agent/conf.d/` when the container starts.
+To enable integrations you can write your YAML configuration files in the `/conf.d` folder, they will automatically be copied to `/etc/dd-agent/conf.d/` when the container starts.  You can also do the same for the `/checks.d` folder.   Any Python files in the `/checks.d` folder will automatically be copied to the `/etc/dd-agent/conf.d/` when the container starts.
 
-1. Create a configuration folder on the host and write your YAML files in it.
+1. Create a configuration folder on the host and write your YAML files in it.  The examples below can be used for the `/checks.d` folder as well.
 
     ```
     mkdir /opt/dd-agent-conf.d
