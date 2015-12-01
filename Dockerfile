@@ -35,9 +35,11 @@ COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 
 COPY entrypoint.sh /entrypoint.sh
 
-# Extra conf.d
+# Extra conf.d and checks.d
 CMD mkdir -p /conf.d
+CMD mkdir -p /checks.d
 VOLUME ["/conf.d"]
+VOLUME ["/checks.d"]
 
 # Expose DogStatsD port
 EXPOSE 8125/udp
