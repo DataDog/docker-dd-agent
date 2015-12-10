@@ -162,6 +162,8 @@ Since the Agent container port 8125 should be linked to the host directly, you c
 
 ## Limitations
 
+The Agent won't be able to collect disk metrics from volumes that are not mounted to the Agent container. If you want to monitor additional partitions, make sure to share them to the container in your docker run command (e.g. `-v /data:/data:ro`)
+
 Docker isolates containers from the host. As a result, the Agent won't have access to all host metrics.
 
 Known missing/incorrect metrics:
