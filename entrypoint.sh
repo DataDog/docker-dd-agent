@@ -36,6 +36,10 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
 fi
 
+find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
+
+find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
+
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 exec "$@"

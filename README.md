@@ -42,9 +42,29 @@ A few parameters can be changed with environment variables.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 
+### Enabling integrations
+
+To enable integrations you can write your YAML configuration files in the `/conf.d` folder, they will automatically be copied to `/etc/dd-agent/conf.d/` when the container starts.  You can also do the same for the `/checks.d` folder.   Any Python files in the `/checks.d` folder will automatically be copied to the `/etc/dd-agent/conf.d/` when the container starts.
+
+1. Create a configuration folder on the host and write your YAML files in it.  The examples below can be used for the `/checks.d` folder as well.
+
+    ```
+    mkdir /opt/dd-agent-conf.d
+    touch /opt/dd-agent-conf.d/nginx.yaml
+    ```
+
+2. When creating the container, mount this new folder to `/conf.d`.
+    ```
+    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -v /opt/dd-agent-conf.d:/conf.d:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
+    ```
+
+    _The important part here is `-v /opt/dd-agent-conf.d:/conf.d:ro`_
+
+Now when the container starts, all files in ``/opt/dd-agent-conf.d` with a `.yaml` extension will be copied to `/etc/dd-agent/conf.d/`. Please note that to add new files you will need to restart the container.
+
 ### Build an image
 
-To configure integrations or custom checks, you will need to build a Docker image on top of this image.
+To configure custom checks, or setup integrations straight in the image, you will need to build a Docker image on top of this image.
 
 1. Create a `Dockerfile` to set your specific configuration or to install dependencies.
 
@@ -61,7 +81,7 @@ To configure integrations or custom checks, you will need to build a Docker imag
 3. Then run it like the `datadog/docker-dd-agent` image.
 
     ```
-    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
+    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
     ```
 
 4. It's done!
