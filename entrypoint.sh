@@ -36,6 +36,26 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $SD_BACKEND ]]; then
+    sed -i -e "s/^# service_discovery_backend:.*$/service_discovery_backend: ${SD_BACKEND}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $SD_CONFIG_BACKEND ]]; then
+    sed -i -e "s/^# sd_config_backend:.*$/sd_config_backend: ${SD_CONFIG_BACKEND}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND_HOST ]]; then
+    sed -i -e "s/^# sd_backend_host:.*$/sd_backend_host: ${SD_BACKEND_HOST}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND_PORT ]]; then
+    sed -i -e "s/^# sd_backend_port:.*$/sd_backend_port: ${SD_BACKEND_PORT}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $BACKEND_TEMPLATE_DIR ]]; then
+    sed -i -e "s/^# backend_template_dir:.*$/backend_template_dir: ${BACKEND_TEMPLATE_DIR}/" /etc/dd-agent/datadog.conf
+fi
+
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
