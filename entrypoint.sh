@@ -36,6 +36,10 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $STATSD_METRIC_NAMESPACE ]]; then
+    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
+fi
+
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
