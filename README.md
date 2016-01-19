@@ -41,6 +41,7 @@ A few parameters can be changed with environment variables.
 * `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
+* `DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.
 
 ### Enabling integrations
 
@@ -60,11 +61,11 @@ To enable integrations you can write your YAML configuration files in the `/conf
 
     _The important part here is `-v /opt/dd-agent-conf.d:/conf.d:ro`_
 
-Now when the container starts, all files in ``/opt/dd-agent-conf.d` with a `.yaml` extension will be copied to `/etc/dd-agent/conf.d/`. Please note that to add new files you will need to restart the container.
+Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml` extension will be copied to `/etc/dd-agent/conf.d/`. Please note that to add new files you will need to restart the container.
 
 ### Build an image
 
-To configure custom checks, or setup integrations straight in the image, you will need to build a Docker image on top of this image.
+To configure specific settings of the agent straight in the image, you may need to build a Docker image on top of this image.
 
 1. Create a `Dockerfile` to set your specific configuration or to install dependencies.
 
@@ -116,19 +117,13 @@ Basic information about the Agent execution are available through the `logs` com
 
 ### Standalone DogStatsD
 
-To run DogStatsD without the full Agent, add the command `dogstatsd` at the end of the `docker run` command.
+To run DogStatsD without the full Agent, add the `DOGSTATSD_ONLY` environment variable to the `docker run` command.
 
 ```
-docker run -d --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent dogstatsd
+docker run -d --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} -e DOGSTATSD_ONLY=true datadog/docker-dd-agent
 ```
 
-Usage commands work, but we added simpler ones when DogStatsD is running on its own.
-
-To display dogstatsd-only information.
-
-`docker exec dogstatsd dogstatsd info`
-
-To display dogstatsd-only logs.
+This option allows you to run dogstatsd alone, without supervisor. One consequence of this is that the following command returns logs from dogstatsd directly instead of supervisor:
 
 `docker logs dogstatsd`
 
