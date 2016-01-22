@@ -53,7 +53,7 @@ if [[ $SD_BACKEND_PORT ]]; then
 fi
 
 if [[ $SD_TEMPLATE_DIR ]]; then
-    sed -i -e "s/^# sd_template_dir:.*$/sd_template_dir: ${SD_TEMPLATE_DIR}/" /etc/dd-agent/datadog.conf
+    sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /etc/dd-agent/datadog.conf
 fi
 
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
