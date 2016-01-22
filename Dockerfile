@@ -6,8 +6,8 @@ ENV DOCKER_DD_AGENT yes
 ENV AGENT_VERSION 1:5.6.3-1
 
 # Install the Agent
-ADD https://circle-artifacts.com/gh/DataDog/docker-dd-agent-build-deb-x64/717/artifacts/0/home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.7.0.git.195.86ea392-1_amd64.deb /
-RUN dpkg -i /datadog-agent_5.7.0.git.195.86ea392-1_amd64.deb && rm /datadog-agent_5.7.0.git.195.86ea392-1_amd64.deb
+ADD https://circle-artifacts.com/gh/DataDog/docker-dd-agent-build-deb-x64/723/artifacts/0/home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.7.0.git.196.eda1d6d-1_amd64.deb /
+RUN dpkg -i /datadog-agent_5.7.0.git.196.eda1d6d-1_amd64.deb && rm /datadog-agent_5.7.0.git.196.eda1d6d-1_amd64.deb
 
 # Configure the Agent
 # 1. Listen to statsd from other containers
