@@ -42,6 +42,30 @@ fi
 
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
+# replacing env var templates with env var values, for instance: ${SHELL} with /bin/bash
+for file in /etc/dd-agent/conf.d/*.yaml; do
+ if [ -f "$file" ]
+ then
+  # create temp file
+  echo -n "" > "$file".tmp
+  while read -r line ; do
+     while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]] ; do
+         LHS=${BASH_REMATCH[1]}
+         RHS="$(eval echo "\"$LHS\"")"
+         line=${line//$LHS/$RHS}
+     done
+     # echo the processed line to the temp file
+     echo "$line" >> "$file".tmp
+  done < "$file"
+
+  # write the temp file instead of the original file
+  cat "$file".tmp > "$file"
+  # delete the temp file
+  rm "$file".tmp
+ fi
+done
+
+
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
