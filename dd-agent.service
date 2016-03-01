@@ -1,5 +1,6 @@
 [Unit]
 Description=Datadog Agent
+Requires=docker.service
 After=docker.service
 
 [Service]
