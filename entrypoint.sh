@@ -17,7 +17,7 @@ if [[ $LOG_LEVEL ]]; then
 fi
 
 if [[ $DD_URL ]]; then
-  sed -i -e "s/^.*dd_url:.*$/dd_url: ${DD_URL}/" /etc/dd-agent/datadog.conf
+    sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' /etc/dd-agent/datadog.conf
 fi
 
 if [[ $PROXY_HOST ]]; then
@@ -36,10 +36,18 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $STATSD_METRIC_NAMESPACE ]]; then
+    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
+fi
+
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
-exec "$@"
+if [[ $DOGSTATSD_ONLY ]]; then
+		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
+else
+		exec "$@"
+fi
