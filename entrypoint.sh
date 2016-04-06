@@ -8,6 +8,10 @@ else
 	exit 1
 fi
 
+if [[ $AGENT_HOSTNAME ]]; then
+	sed -i -e "s/^#hostname:.*$/hostname: ${AGENT_HOSTNAME}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $TAGS ]]; then
 	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
