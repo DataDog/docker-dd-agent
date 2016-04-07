@@ -42,6 +42,7 @@ A few parameters can be changed with environment variables.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 * `DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.
+* `NETWORK_CHECK` enable the network check. **Warning**: read the [network check instructions](#network-check) if you want to enable it.
 
 ### Enabling integrations
 
@@ -62,6 +63,18 @@ To enable integrations you can write your YAML configuration files in the `/conf
     _The important part here is `-v /opt/dd-agent-conf.d:/conf.d:ro`_
 
 Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml` extension will be copied to `/etc/dd-agent/conf.d/`. Please note that to add new files you will need to restart the container.
+
+
+#### Network check
+
+By default the network check is not included in this Docker image. That is because the container's network is separated from the host's, so the metrics this check would collect would be irrelevant.
+
+If you wish to collect host-level network metrics, you will need to run the agent container with the `NETWORK_CHECK` environment variable (`-e NETWORK_CHECK=true`) to explicitly enable the network check, and the `--net=host` option.
+This option tells Docker to not containerize the container's networking. It allows the agent to collect network metrics at the host level.
+
+Using this option requires a few adjustments:
+* The `--net=host` option must replace the `-h` one, as recent versions of Docker make these flags mutually exclusive.
+* You need to make sure all ports used by the Datadog agent are free on the host. Since the container's networking is not containerized, it will use the ports directly from the host. Refer to the [agent architecture page](https://github.com/DataDog/dd-agent/wiki/Agent-Architecture#supervision-privileges-and-network-ports) for a list of said ports.
 
 ### Build an image
 
