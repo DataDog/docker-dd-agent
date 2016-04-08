@@ -5,4 +5,4 @@
 FROM datadog/docker-dd-agent
 
 # Add Apache check configuration
-ADD apache.yaml /etc/dd-agent/conf.d/apache.yaml
+ADD apache.yaml /opt/datadog-agent/agent/conf.d/apache.yaml

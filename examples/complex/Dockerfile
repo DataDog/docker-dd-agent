@@ -5,4 +5,4 @@
 FROM datadog/docker-dd-agent
 
 # Add a constom datadog.conf
-ADD datadog.conf /etc/dd-agent/datadog.conf
+ADD datadog.conf /opt/datadog-agent/agent/datadog.conf

@@ -18,6 +18,14 @@ docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/doc
 datadog/docker-dd-agent
 ```
 
+Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is a little smaller (about 10%) than the Debian-based one, and benefits from Alpine's security-oriented design.
+It is compatible with all options described in this file (dogstatsd only, enabling integrations, etc.).
+
+This image is available under the `alpine` Docker tag and can be used this way:
+```
+docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent:alpine
+```
+
 ## Versioning
 
 As per Agent 5.5.0. The docker image is following a new versioning pattern to allow us to release changes to the Docker image of the Datadog Agent but with the same version of the Agent.

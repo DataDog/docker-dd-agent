@@ -5,4 +5,4 @@
 FROM datadog/docker-dd-agent
 
 # Add MySQL check configuration
-ADD mysql.yaml /etc/dd-agent/conf.d/mysql.yaml
+ADD mysql.yaml /opt/datadog-agent/agent/conf.d/mysql.yaml
