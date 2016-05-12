@@ -16,6 +16,10 @@ if [[ $DD_TAGS ]]; then
   export TAGS=${DD_TAGS}
 fi
 
+if [[ $EC2_TAGS ]]; then
+	sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $TAGS ]]; then
 	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
