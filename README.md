@@ -43,6 +43,12 @@ A few parameters can be changed with environment variables.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 * `DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.
 
+**Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
+
+This change was introduced to ease the setup in environments where the environments variables are set globally. In such environments, generic variable names such as `TAGS` or `API_KEY` can lead to conflicts with the configuration of other containers.
+
+If the agent is installed in such an environment (Amazon Elastic Beanstalk for example), we recommend using the `DD_` prefixed variables to avoid configuration issues.
+
 ### Enabling integrations
 
 To enable integrations you can write your YAML configuration files in the `/conf.d` folder, they will automatically be copied to `/etc/dd-agent/conf.d/` when the container starts.  You can also do the same for the `/checks.d` folder.   Any Python files in the `/checks.d` folder will automatically be copied to the `/etc/dd-agent/checks.d/` when the container starts.
