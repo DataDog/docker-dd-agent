@@ -1,11 +1,19 @@
 #!/bin/bash
 #set -e
 
+if [[ $DD_API_KEY ]]; then
+  export API_KEY=${DD_API_KEY}
+fi
+
 if [[ $API_KEY ]]; then
 	sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /etc/dd-agent/datadog.conf
 else
 	echo "You must set API_KEY environment variable to run the Datadog Agent container"
 	exit 1
+fi
+
+if [[ $DD_TAGS ]]; then
+  export TAGS=${DD_TAGS}
 fi
 
 if [[ $EC2_TAGS ]]; then
@@ -14,6 +22,10 @@ fi
 
 if [[ $TAGS ]]; then
 	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $DD_LOG_LEVEL ]]; then
+  export LOG_LEVEL=$DD_LOG_LEVEL
 fi
 
 if [[ $LOG_LEVEL ]]; then
