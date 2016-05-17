@@ -27,7 +27,6 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  && sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
  && chmod +x /etc/init.d/datadog-agent \
- && rm /etc/dd-agent/conf.d/network.yaml.default \
  && ln -s /opt/datadog-agent/agent/dogstatsd.py /usr/bin/dogstatsd
 
 # Add Docker check
