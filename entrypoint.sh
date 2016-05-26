@@ -83,6 +83,7 @@ find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 if [[ $DOGSTATSD_ONLY ]]; then
+        echo "[WARNING] This option is deprecated as of agent 5.8.0, it will be removed in the next few versions. Please use the dogstatsd image instead."
 		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
 else
 		exec "$@"
