@@ -49,7 +49,7 @@ if [[ $PROXY_USER ]]; then
 fi
 
 if [[ $PROXY_PASSWORD ]]; then
-    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $SD_BACKEND ]]; then
