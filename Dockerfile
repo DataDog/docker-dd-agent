@@ -3,14 +3,24 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.8.0-1
+ENV AGENT_VERSION 1:5.10.0-1
 
-# Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
- && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get clean \
+# Install the Agent (manually)
+
+ADD datadog-agent_5.10.0-rpcready_amd64.deb /tmp/
+ADD jmxfetch-0.12.0-jar-with-dependencies.jar /tmp/
+
+RUN dpkg -i /tmp/datadog-agent_5.10.0-rpcready_amd64.deb && \
+    cp /tmp/jmxfetch-0.12.0-jar-with-dependencies.jar /opt/datadog-agent/agent/checks/libs/
+
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/webupd8team-java.list && \
+    echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list.d/webupd8team-java.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886 && \
+    apt-get update && \
+    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections && \
+    apt-get install -y oracle-java8-installer
+
+RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Configure the Agent
