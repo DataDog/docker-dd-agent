@@ -5,12 +5,13 @@ MAINTAINER Datadog <package@datadoghq.com>
 ENV DOCKER_DD_AGENT yes
 ENV AGENT_VERSION 1:5.8.0-1
 
-# Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
- && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get clean \
+# Install the Agent (manually)
+
+ADD datadog-agent_*.deb /tmp/
+
+RUN for f in $(find /tmp -type f -iname "datadog-agent*.deb" -print0); do dpkg -i $f; done
+
+RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Configure the Agent
