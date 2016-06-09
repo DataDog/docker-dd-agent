@@ -46,10 +46,22 @@ e.g. the first version of the Docker image that will bundle the Datadog Agent 5.
 A few parameters can be changed with environment variables.
 
 * `TAGS` set host tags. Add `-e TAGS="simple-tag-0,tag-key-1:tag-value-1"` to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
+* `EC2_TAGS` set EC2 host tags. Add `-e EC2_TAGS=yes` to use EC2 custom host tags. Requires an [IAM role](https://github.com/DataDog/dd-agent/wiki/Capturing-EC2-tags-at-startup) associated with the instance.
 * `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 * `DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.
+* `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT` and `SD_TEMPLATE_DIR` configure service discovery.
+`SD_BACKEND` can only be set to `docker` for now, since service discovery works only with docker containers.
+`SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support right now.
+`SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
+
+
+**Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
+
+This change was introduced to ease the setup in environments where the environments variables are set globally. In such environments, generic variable names such as `TAGS` or `API_KEY` can lead to conflicts with the configuration of other containers.
+
+If the agent is installed in such an environment (Amazon Elastic Beanstalk for example), we recommend using the `DD_` prefixed variables to avoid configuration issues.
 
 ### Enabling integrations
 

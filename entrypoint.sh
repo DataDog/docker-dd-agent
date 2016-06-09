@@ -1,6 +1,10 @@
 #!/bin/sh
 #set -e
 
+if [[ $DD_API_KEY ]]; then
+  export API_KEY=${DD_API_KEY}
+fi
+
 if [[ $API_KEY ]]; then
 	sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /opt/datadog-agent/agent/datadog.conf
 else
@@ -8,8 +12,20 @@ else
 	exit 1
 fi
 
+if [[ $DD_TAGS ]]; then
+  export TAGS=${DD_TAGS}
+fi
+
+if [[ $EC2_TAGS ]]; then
+	sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
 if [[ $TAGS ]]; then
 	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $DD_LOG_LEVEL ]]; then
+  export LOG_LEVEL=$DD_LOG_LEVEL
 fi
 
 if [[ $LOG_LEVEL ]]; then
@@ -33,7 +49,27 @@ if [[ $PROXY_USER ]]; then
 fi
 
 if [[ $PROXY_PASSWORD ]]; then
-    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /opt/datadog-agent/agent/datadog.conf
+    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND ]]; then
+    sed -i -e "s/^# service_discovery_backend:.*$/service_discovery_backend: ${SD_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $SD_CONFIG_BACKEND ]]; then
+    sed -i -e "s/^# sd_config_backend:.*$/sd_config_backend: ${SD_CONFIG_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND_HOST ]]; then
+    sed -i -e "s/^# sd_backend_host:.*$/sd_backend_host: ${SD_BACKEND_HOST}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND_PORT ]]; then
+    sed -i -e "s/^# sd_backend_port:.*$/sd_backend_port: ${SD_BACKEND_PORT}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $SD_TEMPLATE_DIR ]]; then
+    sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
 if [[ $STATSD_METRIC_NAMESPACE ]]; then
