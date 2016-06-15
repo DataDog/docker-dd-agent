@@ -80,6 +80,14 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $SET_AWS_INSTANCE_ID_AS_HOSTNAME ]]; then
+    sed -i -e "s/^#hostname:.*$/hostname: $(curl http://169.254.169.254/latest/meta-data/instance-id)/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $SET_AWS_HOSTNAME_AS_HOSTNAME ]]; then
+    sed -i -e "s/^#hostname:.*$/hostname: $(curl http://169.254.169.254/latest/meta-data/hostname)/" /etc/dd-agent/datadog.conf
+fi
+
 find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
