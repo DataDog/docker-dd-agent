@@ -13,7 +13,7 @@ else
 fi
 
 if [[ $DD_HOSTNAME ]]; then
-	sed -i -e "s/^#hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
+	sed -i -e "s/^# hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_TAGS ]]; then
@@ -25,7 +25,7 @@ if [[ $EC2_TAGS ]]; then
 fi
 
 if [[ $TAGS ]]; then
-	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
+	sed -i -e "s/^# tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_LOG_LEVEL ]]; then
