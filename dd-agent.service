@@ -1,0 +1,28 @@
+[Unit]
+Description=Datadog Agent
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+EnvironmentFile=/etc/os-release
+ExecStartPre=-/usr/bin/docker stop dd-agent
+ExecStartPre=-/usr/bin/docker rm -f dd-agent
+ExecStartPre=/usr/bin/docker pull datadog/docker-dd-agent
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill dd-agent
+ExecStartPre=-/usr/bin/docker rm dd-agent
+ExecStart=/bin/bash -c " \
+  metadata=$(fleetctl list-machines -fields machine,metadata -full -no-legend | grep %m | awk '$2 !~ /-/ { gsub(/=/, \":\"); print \",\" $2;}'); \
+  docker run --name dd-agent \
+    -h %H \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /proc/mounts:/host/proc/mounts:ro \
+    -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+    -e API_KEY=`etcdctl get /datadog/apikey` \
+    -e TAGS=\"os-name:$NAME,os-version:$VERSION,machine-id:%m$metadata\" \
+    datadog/docker-dd-agent"
+ExecStop=/usr/bin/docker stop dd-agent
+
+[X-Fleet]
+Global=true
