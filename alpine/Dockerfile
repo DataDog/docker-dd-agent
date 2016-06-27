@@ -12,7 +12,7 @@ ENV DD_HOME=/opt/datadog-agent \
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
 
 # Add install and config files
-ADD https://raw.githubusercontent.com/DataDog/dd-agent/5.8.0/packaging/datadog-agent/source/setup_agent.sh /setup_agent.sh
+ADD https://raw.githubusercontent.com/DataDog/dd-agent/$AGENT_VERSION/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
 COPY entrypoint.sh /entrypoint.sh
 
 # Expose supervisor and DogStatsD port
@@ -24,7 +24,7 @@ RUN apk add -qU --no-cache curl-dev python-dev tar sysstat
 # Install build dependencies
 RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
     # Install the agent
-    && sh /setup_agent.sh \
+    && sh /tmp/setup_agent.sh \
     # Clean build dependencies
     && apk del -q .build-deps
 
@@ -39,11 +39,10 @@ RUN cp "$DD_HOME/agent/datadog.conf.example" "$DD_HOME/agent/datadog.conf" \
   && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" "$DD_HOME/agent/datadog.conf" \
   && sed -i "/user=dd-agent/d" "$DD_HOME/agent/supervisor.conf" \
   && rm "$DD_HOME/agent/conf.d/network.yaml.default" \
-  && rm /setup_agent.sh
+  && rm /tmp/setup_agent.sh
 
 # Extra conf.d and checks.d
-VOLUME ["/conf.d"]
-VOLUME ["/checks.d"]
+VOLUME ["/conf.d", "/checks.d"]
 
 ENTRYPOINT ["/entrypoint.sh"]
 
