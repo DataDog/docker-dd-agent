@@ -44,3 +44,4 @@ EXPOSE 8125/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
+

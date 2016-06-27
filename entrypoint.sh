@@ -91,3 +91,4 @@ if [[ $DOGSTATSD_ONLY ]]; then
 else
 		exec "$@"
 fi
+
