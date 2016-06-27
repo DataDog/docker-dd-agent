@@ -5,11 +5,11 @@ MAINTAINER Datadog <package@datadoghq.com>
 ENV DOCKER_DD_AGENT yes
 ENV AGENT_VERSION 1:5.8.0-1
 
-# Install the Agent
+# Install the Agent + dnsutils
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
  && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
+ && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" dnsutils \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -33,15 +33,24 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
 # Add Docker check
 COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 
-COPY entrypoint.sh /entrypoint.sh
+# Add Mesos master/slave check
+COPY conf.d/mesos_master.yaml /etc/dd-agent/conf.d/mesos_master.yaml
+COPY conf.d/mesos_slave.yaml /etc/dd-agent/conf.d/mesos_slave.yaml
+
+# Add Marathon check
+COPY conf.d/marathon.yaml /etc/dd-agent/conf.d/marathon.yaml
+
+# Add Zookeeper check
+COPY conf.d/zk.yaml /etc/dd-agent/conf.d/zk.yaml
 
 # Extra conf.d and checks.d
 VOLUME ["/conf.d"]
 VOLUME ["/checks.d"]
 
-# Expose DogStatsD port
-EXPOSE 8125/udp
+COPY entrypoint.sh /entrypoint.sh
+
+# Expose DogStatsD port and supervisord
+EXPOSE 8125/udp 9001/tcp
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
-

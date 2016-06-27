@@ -1,0 +1,4 @@
+init_config:
+  default_timeout: 10
+
+instances:
