@@ -80,9 +80,21 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
 fi
 
-find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
+if [[ $MARATHON_URL ]]; then
+    sed -i -e 's/# - url: "marathon_url"/- url: "${MARATHON_URL}"/' /etc/dd-agent/conf.d/marathon.yaml
+fi
 
-find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
+# Mesos
+
+for AGENT in $(dig +short slave.mesos); do
+    echo "  - url: \"http://$AGENT:5051\"" >> /etc/dd-agent/conf.d/mesos_slave.yaml
+done
+
+cat <<EOF >> /etc/dd-agent/supervisor.conf
+
+[inet_http_server]
+port = 0.0.0.0:9001
+EOF
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
@@ -91,4 +103,3 @@ if [[ $DOGSTATSD_ONLY ]]; then
 else
 		exec "$@"
 fi
-
