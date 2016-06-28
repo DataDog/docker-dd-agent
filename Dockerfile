@@ -6,12 +6,8 @@ ENV DOCKER_DD_AGENT yes
 ENV AGENT_VERSION 1:5.8.0-1
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
- && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ADD https://1038-34269086-gh.circle-artifacts.com/0//home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.8.3~rc.3-1_amd64.deb /
+RUN dpkg -i /datadog-agent_5.8.3~rc.3-1_amd64.deb && rm /datadog-agent_5.8.3~rc.3-1_amd64.deb
 
 # Configure the Agent
 # 1. Listen to statsd from other containers
@@ -32,7 +28,8 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
-
+COPY supervisor.conf /etc/dd-agent/supervisor.conf
+COPY conf.d/kubernetes.yaml /etc/dd-agent/conf.d/kubernetes.yaml
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
@@ -41,6 +38,7 @@ VOLUME ["/checks.d"]
 
 # Expose DogStatsD port
 EXPOSE 8125/udp
+EXPOSE 9001/tcp
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
