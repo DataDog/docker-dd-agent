@@ -76,6 +76,35 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $MESOS_MASTER || $MESOS_SLAVE ]]; then
+    # expose supervisor as a health check
+    echo "
+[inet_http_server]
+port = 0.0.0.0:9001
+" >> /opt/datadog-agent/agent/supervisor.conf
+fi
+
+if [[ $MESOS_MASTER ]]; then
+    cp /opt/datadog-agent/agent/conf.d/mesos_master.yaml.example /opt/datadog-agent/agent/conf.d/mesos_master.yaml
+    cp /opt/datadog-agent/agent/conf.d/zk.yaml.example /opt/datadog-agent/agent/conf.d/zk.yaml
+
+    sed -i -e "s/localhost/leader.mesos/" /opt/datadog-agent/agent/conf.d/mesos_master.yaml
+    sed -i -e "s/localhost/leader.mesos/" /opt/datadog-agent/agent/conf.d/zk.yaml
+fi
+
+if [[ $MESOS_SLAVE ]]; then
+    cp /opt/datadog-agent/agent/conf.d/mesos_slave.yaml.example /opt/datadog-agent/agent/conf.d/mesos_slave.yaml
+
+    # figure out hostname using the Docker info command
+    server=`/opt/datadog-agent/venv/bin/python -c "import docker;print docker.Client(version='auto').info().get('Name', '172.17.42.1')"`
+
+    sed -i -e "s/localhost/$server/" /opt/datadog-agent/agent/conf.d/mesos_slave.yaml
+fi
+
+if [[ $MARATHON_URL ]]; then
+    cp /opt/datadog-agent/agent/conf.d/marathon.yaml.example /opt/datadog-agent/agent/conf.d/marathon.yaml
+    sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /opt/datadog-agent/agent/conf.d/marathon.yaml
+fi
 
 find /conf.d -name '*.yaml' -exec cp {} /opt/datadog-agent/agent/conf.d \;
 
