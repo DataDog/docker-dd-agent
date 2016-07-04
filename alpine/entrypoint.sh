@@ -12,6 +12,10 @@ else
 	exit 1
 fi
 
+if [[ $DD_HOSTNAME ]]; then
+	sed -i -e "s/^#hostname.*$/hostname: ${DD_HOSTNAME}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
 if [[ $DD_TAGS ]]; then
   export TAGS=${DD_TAGS}
 fi
