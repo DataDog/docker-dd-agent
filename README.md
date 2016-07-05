@@ -23,7 +23,7 @@ It is compatible with all options described in this file (dogstatsd only, enabli
 
 This image is available under the `alpine` Docker tag and can be used this way:
 ```
-docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent:alpine
+docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent:alpine
 ```
 
 Please note that in this version, check configuration files must be stored in `/opt/datadog-agent/agent/conf.d/` instead of `/etc/dd-agent/conf.d/`
