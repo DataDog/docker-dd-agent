@@ -18,15 +18,19 @@ docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /p
 datadog/docker-dd-agent
 ```
 
-Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is a little smaller (about 10%) than the Debian-based one, and benefits from Alpine's security-oriented design.
+Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is smaller (about 60% the size of the Debian based one), and benefits from Alpine's security-oriented design.
 It is compatible with all options described in this file (dogstatsd only, enabling integrations, etc.).
 
-This image is available under the `alpine` Docker tag and can be used this way:
+This image is available under tags with the following naming convention `classic_tag_name-alpine`. So for example to use the latest tag: `datadog/docker-dd-agent:latest-alpine` must be pulled. To use a specific version number, specify `11.2.583-alpine`.
+
+The Alpine version can be used this way:
 ```
 docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent:alpine
 ```
 
-Please note that in this version, check configuration files must be stored in `/opt/datadog-agent/agent/conf.d/` instead of `/etc/dd-agent/conf.d/`
+**Note**: In this version, check configuration files must be stored in `/opt/datadog-agent/agent/conf.d/` instead of `/etc/dd-agent/conf.d/`.
+
+**Warning**: This version is recent, and while the main features have been tested, its behaviour may differ a little. If you find a bug, don't hesitate to open an issue, feedback about it is appreciated.
 
 
 ## Versioning
