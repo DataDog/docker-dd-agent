@@ -50,7 +50,7 @@ By default the agent container will use the `Name` field found in the `docker in
 
 ### Environment variables
 
-A few parameters can be changed with environment variables.
+A few parameters can be changed with environment variables:
 
 * `DD_HOSTNAME` set the hostname (write it in `datadog.conf`)
 * `TAGS` set host tags. Add `-e TAGS="simple-tag-0,tag-key-1:tag-value-1"` to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
@@ -64,6 +64,10 @@ A few parameters can be changed with environment variables.
 `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support right now.
 `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
 
+It is also possible to enable some checks this way:
+
+* `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks.
+* `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
 
