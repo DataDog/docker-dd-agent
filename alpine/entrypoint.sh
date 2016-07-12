@@ -80,12 +80,16 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
-if [[ $MESOS_MASTER || $MESOS_SLAVE ]]; then
-    # expose supervisor as a health check
+if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
+    # expose supervisord as a health check
     echo "
 [inet_http_server]
 port = 0.0.0.0:9001
 " >> /opt/datadog-agent/agent/supervisor.conf
+fi
+
+if [[ $KUBERNETES ]]; then
+    cp /opt/datadog-agent/agent/conf.d/kubernetes.yaml.example /opt/datadog-agent/agent/conf.d/kubernetes.yaml
 fi
 
 if [[ $MESOS_MASTER ]]; then
