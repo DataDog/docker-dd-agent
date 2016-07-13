@@ -4,7 +4,7 @@ prj_dir="$(dirname $( cd "$( dirname "$0" )" && pwd ))"
 
 # docker namespace, that is private docker registry FQDN + repo
 docker_ns=docker.amz.relateiq.com/ops
-image_name="$docker_ns/dcosiq-dd"
+image_name="$docker_ns/dd-agent"
 
 tag=latest
 build_number=latest
