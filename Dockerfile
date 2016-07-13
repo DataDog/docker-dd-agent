@@ -36,8 +36,7 @@ COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
-VOLUME ["/conf.d"]
-VOLUME ["/checks.d"]
+VOLUME ["/conf.d", "/checks.d"]
 
 # Expose DogStatsD and supervisord ports
 EXPOSE 8125/udp 9001/tcp
