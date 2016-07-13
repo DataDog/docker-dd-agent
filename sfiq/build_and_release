@@ -7,16 +7,19 @@ docker_ns=docker.amz.relateiq.com/ops
 image_name="$docker_ns/dcosiq-dd"
 
 tag=latest
+build_number=latest
 push_to_registry=false
-while getopts "t:P" opt; do
+while getopts "t:b:P" opt; do
     case $opt in
         t) tag=$OPTARG ;;
+        b) build_number=$OPTARG ;;
         P) push_to_registry=true ;;
     esac
 done
 
 pushd $prj_dir
 docker build \
+    --build-arg BUILD_NUMBER=$build_number \
     -t $image_name:$tag \
     .
 popd

@@ -47,10 +47,15 @@ CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
 
 # SFIQ customization
 ENV DCOS_ENV ops
-ADD ./sfiq/get_dd_api_key.py /sfiq
+
+RUN apt-get update && \
+    apt-get install -y python curl && \
+    curl -ksL https://bootstrap.pypa.io/get-pip.py | python
 
 # internal deps, we do NOT want cache for them
 # let's bust the cache by referencing an ARG that's supposed to be different for each build
 ARG BUILD_NUMBER
-ADD ./sfiq/requirement_internal.txt /sfiq/requirement_internal_${BUILD_NUMBER}.txt
+COPY ./sfiq/requirement_internal.txt /sfiq/requirement_internal_${BUILD_NUMBER}.txt
 RUN pip install -r /sfiq/requirement_internal_${BUILD_NUMBER}.txt
+
+COPY ./sfiq/get_api_key.py /sfiq
