@@ -44,3 +44,15 @@ EXPOSE 8125/udp 9001/tcp
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
+
+# SFIQ customization
+ADD ./sfiq/get_dd_api_key.py /sfiq
+
+ENV DCOS_ENV ops
+
+# internal deps, we do NOT want cache for them
+# let's bust the cache by referencing an ARG that's supposed to be different for each build
+ARG BUILD_NUMBER
+ADD requirement_internal.txt /sfiq/requirement_internal_${BUILD_NUMBER}.txt
+RUN pip install -r /sfiq/requirement_internal_${BUILD_NUMBER}.txt
+

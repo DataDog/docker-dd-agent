@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -e
 
+DD_API_KEY=$(python /sfiq/get_dd_api_key.py)
+
 if [[ $DD_API_KEY ]]; then
   export API_KEY=${DD_API_KEY}
 fi
