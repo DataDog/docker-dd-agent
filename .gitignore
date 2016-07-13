@@ -1,0 +1,10 @@
+pve*/
+*.pyc
+*~
+*.log
+.*/
+*.egg-info/
+tags
+htmlcov/*
+.coverage
+*,cover
