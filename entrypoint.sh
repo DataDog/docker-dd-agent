@@ -1,7 +1,7 @@
 #!/bin/bash
 #set -e
 
-DD_API_KEY=$(python ./sfiq/get_api_key.py)
+DD_API_KEY=$(python sfiq/get_key.py)
 
 
 if [[ $DD_API_KEY ]]; then
