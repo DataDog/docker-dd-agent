@@ -4,7 +4,7 @@ MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DD_HOME=/opt/datadog-agent \
     DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=5.8.4 \
+    AGENT_VERSION=5.8.5-beta1 \
     # prevent the agent from being started after install
     DD_START_AGENT=0
 
