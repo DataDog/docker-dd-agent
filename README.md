@@ -133,6 +133,9 @@ To display information about the Agent's state with this command.
 
 `docker exec dd-agent service datadog-agent info`
 
+On the alpine container...
+`docker exec dd-agent /opt/datadog-agent/bin/agent info`
+
 Warning: the `docker exec` command is available only with Docker 1.3 and above.
 
 ## Logs
@@ -149,6 +152,13 @@ Basic information about the Agent execution are available through the `logs` com
 
 `docker logs dd-agent`
 
+Exec a shell on the container and tail logs for debugging (alpine version shown)
+
+```
+$ docker exec -it dd-agent ash 
+/opt/datadog-agent # tail -f /opt/datadog-agent/logs/dogstatsd.log 
+2016-07-22 23:09:09 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:210) | Flush #8: flushed 1 metric, 0 events, and 0 service check runs 
+```
 
 ## DogStatsD
 
