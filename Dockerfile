@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.6.3-1
+ENV AGENT_VERSION 1:5.8.5-1
 
 # Install the Agent
 ADD https://1021-34269086-gh.circle-artifacts.com/0//home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.9.0.git.56.2c0c4e9-1_amd64.deb /
@@ -38,15 +38,10 @@ COPY conf.d/kubernetes.yaml /etc/dd-agent/conf.d/kubernetes.yaml
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
-CMD mkdir -p /conf.d
-CMD mkdir -p /checks.d
-VOLUME ["/conf.d"]
-VOLUME ["/checks.d"]
+VOLUME ["/conf.d", "/checks.d"]
 
-# Expose supervisor port
-EXPOSE 9001/tcp
+# Expose DogStatsD and supervisord ports
+EXPOSE 8125/udp 9001/tcp
 
-# Expose DogStatsD port
-EXPOSE 8125/udp
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]

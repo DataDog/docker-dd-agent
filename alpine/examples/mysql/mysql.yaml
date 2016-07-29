@@ -1,0 +1,12 @@
+init_config:
+
+instances:
+  - server: 172.17.42.1
+    user: datadog
+    pass: password
+    tags:
+        - optional_tag1
+        - optional_tag2
+    options:
+        replication: 0
+        galera_cluster: 1/
