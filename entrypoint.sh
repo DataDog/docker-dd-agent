@@ -2,34 +2,34 @@
 #set -e
 
 if [[ $DD_API_KEY ]]; then
-  export API_KEY=${DD_API_KEY}
+    export API_KEY=${DD_API_KEY}
 fi
 
 if [[ $API_KEY ]]; then
-	sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /etc/dd-agent/datadog.conf
 else
-	echo "You must set API_KEY environment variable to run the Datadog Agent container"
-	exit 1
+    echo "You must set API_KEY environment variable to run the Datadog Agent container"
+    exit 1
 fi
 
 if [[ $DD_HOSTNAME ]]; then
-	sed -i -e "s/^#hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^#hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_TAGS ]]; then
-  export TAGS=${DD_TAGS}
+    export TAGS=${DD_TAGS}
 fi
 
 if [[ $EC2_TAGS ]]; then
-	sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $TAGS ]]; then
-	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_LOG_LEVEL ]]; then
-  export LOG_LEVEL=$DD_LOG_LEVEL
+    export LOG_LEVEL=$DD_LOG_LEVEL
 fi
 
 if [[ $LOG_LEVEL ]]; then
@@ -82,10 +82,10 @@ fi
 
 if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
     # expose supervisord as a health check
-    echo "
-[inet_http_server]
-port = 0.0.0.0:9001
-" >> /etc/dd-agent/supervisor.conf
+    cat >> /etc/dd-agent/supervisor.conf <<-EOF
+	[inet_http_server]
+	port = 0.0.0.0:9001
+	EOF
 fi
 
 if [[ $KUBERNETES ]]; then
@@ -122,7 +122,7 @@ find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 if [[ $DOGSTATSD_ONLY ]]; then
-		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
+    PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
 else
-		exec "$@"
+    exec "$@"
 fi
