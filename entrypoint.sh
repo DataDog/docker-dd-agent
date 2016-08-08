@@ -1,6 +1,8 @@
 #!/bin/bash
 #set -e
 
+shopt -s nullglob # required to handle case that directories are empty.
+
 if [[ $DD_API_KEY ]]; then
     export API_KEY=${DD_API_KEY}
 fi
@@ -115,9 +117,31 @@ if [[ $MARATHON_URL ]]; then
     sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /etc/dd-agent/conf.d/marathon.yaml
 fi
 
-find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
+# Copy in configs
+for f in /conf.d/*; do
+    case "$f" in
+        *.yaml)     echo "$0: copying $f"; cp "$f" /etc/dd-agent/conf.d ;;
+        *)          echo "$0: ignoring $f" ;;
+    esac
+    echo
+done
 
-find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
+# Copy in checks
+for f in /checks.d/*; do
+    case "$f" in
+        *.py)       echo "$0: copying $f"; cp "$f" /etc/dd-agent/checks.d ;;
+        *)          echo "$0: ignoring $f" ;;
+    esac
+done
+
+# Run custom loaded shell scripts
+for f in /entrypoint-init.d/*; do
+    case "$f" in
+        *.sh)       echo "$0: running $f"; . "$f" ;;
+        *)          echo "$0: ignoring $f" ;;
+    esac
+    echo
+done
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
