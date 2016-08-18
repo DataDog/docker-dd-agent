@@ -93,6 +93,7 @@ if [[ $KUBERNETES ]]; then
     cp /etc/dd-agent/conf.d/kubernetes.yaml.example /etc/dd-agent/conf.d/kubernetes.yaml
 
     # enable event collector
+    # WARNING: to avoid duplicates, only one agent at a time across the entire cluster should have this feature enabled.
     if [[ $KUBERNETES_COLLECT_EVENTS ]]; then
         sed -i -e "s@# collect_events: false@collect_events: true@" /etc/dd-agent/conf.d/kubernetes.yaml
     fi
