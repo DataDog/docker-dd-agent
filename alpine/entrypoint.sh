@@ -90,6 +90,11 @@ fi
 
 if [[ $KUBERNETES ]]; then
     cp /opt/datadog-agent/agent/conf.d/kubernetes.yaml.example /opt/datadog-agent/agent/conf.d/kubernetes.yaml
+
+    # enable event collector
+    if [[ $KUBERNETES_COLLECT_EVENTS ]]; then
+        sed -i -e "s@# collect_events: false@collect_events: true@" /opt/datadog-agent/agent/conf.d/kubernetes.yaml
+    fi
 fi
 
 if [[ $MESOS_MASTER ]]; then
