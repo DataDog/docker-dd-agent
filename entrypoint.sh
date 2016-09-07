@@ -1,16 +1,6 @@
 #!/bin/bash
 #set -e
 
-function get_hostname {
-    local host=`/opt/datadog-agent/embedded/bin/python -c "import docker;print docker.Client(version='auto').info().get('Name', '')"`
-    echo $host
-}
-
-function get_default_gateway {
-    local host=`ip route | grep default | cut -d' ' -f3`
-    echo $host
-}
-
 if [[ $DD_API_KEY ]]; then
   export API_KEY=${DD_API_KEY}
 fi
@@ -114,18 +104,7 @@ fi
 if [[ $MESOS_SLAVE ]]; then
     cp /etc/dd-agent/conf.d/mesos_slave.yaml.example /etc/dd-agent/conf.d/mesos_slave.yaml
 
-    # get hostname from the mesos IP endpoint
-    server=$(get_hostname)
-
-    # check if it resolves to the mesos slave
-    /opt/datadog-agent/embedded/bin/curl -I -s -m 1 http://$server:5051/state.json > /dev/null
-
-    # if it failed, try the hostname from docker info
-    if [[ $? != 0 ]]; then
-        server=$(get_default_gateway)
-    fi
-
-    sed -i -e "s/localhost/$server/" /etc/dd-agent/conf.d/mesos_slave.yaml
+    sed -i -e "s/localhost/$HOST/" /etc/dd-agent/conf.d/mesos_slave.yaml
 fi
 
 if [[ $MARATHON_URL ]]; then
