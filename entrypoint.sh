@@ -133,7 +133,7 @@ if [[ $MARATHON_URL ]]; then
     sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /etc/dd-agent/conf.d/marathon.yaml
 fi
 
-find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
+find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 

@@ -132,7 +132,7 @@ if [[ $MARATHON_URL ]]; then
     sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /opt/datadog-agent/agent/conf.d/marathon.yaml
 fi
 
-find /conf.d -name '*.yaml' -exec cp {} /opt/datadog-agent/agent/conf.d \;
+find /conf.d -name '*.yaml' -exec cp --parents {} /opt/datadog-agent/agent \;
 
 find /checks.d -name '*.py' -exec cp {} /opt/datadog-agent/agent/checks.d \;
 
