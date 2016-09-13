@@ -8,7 +8,7 @@ ENV DOCKER_DD_AGENT yes
 RUN echo "deb http://apt.datad0g.com/ nightly main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
  && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent=1:5.9.0~rc.2-1 \
+ && apt-get install --no-install-recommends -y datadog-agent=1:5.9.0~rc.3-1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
