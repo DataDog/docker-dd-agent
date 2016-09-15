@@ -14,6 +14,7 @@ RUN echo "deb http://apt.datad0g.com/ nightly main" > /etc/apt/sources.list.d/da
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
  
 RUN /opt/datadog-agent/embedded/bin/curl -L -k -o /opt/datadog-agent/agent/utils/cloud_metadata.py https://raw.githubusercontent.com/DataDog/dd-agent/master/utils/cloud_metadata.py
+RUN /opt/datadog-agent/embedded/bin/curl -L -k -o /opt/datadog-agent/agent/checks.d/docker_daemon.py https://raw.githubusercontent.com/DataDog/dd-agent/master/checks.d/docker_daemon.py
 
 # Configure the Agent
 # 1. Listen to statsd from other containers
