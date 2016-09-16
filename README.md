@@ -186,6 +186,8 @@ This option allows you to run dogstatsd alone, without supervisor. One consequen
 
 `docker logs dogstatsd`
 
+**Note**: This will run DogStatsD only. Tags are collected from the configuration file and from the Docker labels in the collector process which is not running when using this option. Thus those tags will not be associated with any metrics and events processed by this container.
+
 ### DogStatsD from the host
 
 DogStatsD can be available on port 8125 from anywhere by adding the option `-p 8125:8125/udp` to the `docker run` command.
