@@ -2,8 +2,8 @@ FROM debian:jessie
 
 MAINTAINER Datadog <package@datadoghq.com>
 
-ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.8.5-1
+ENV DOCKER_DD_AGENT=yes \
+    AGENT_VERSION=1:5.8.5-1
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
