@@ -3,10 +3,10 @@ FROM alpine:3.4
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DD_HOME=/opt/datadog-agent \
-    DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=5.8.5 \
     # prevent the agent from being started after install
-    DD_START_AGENT=0
+    DD_START_AGENT=0 \
+    DOCKER_DD_AGENT=yes \
+    AGENT_VERSION=5.8.5
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
