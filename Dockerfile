@@ -42,16 +42,8 @@ COPY entrypoint.sh /entrypoint.sh
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]
 
-<<<<<<< HEAD
-# Expose supervisor port
-EXPOSE 9001/tcp
-
-# Expose DogStatsD port
-EXPOSE 8125/udp
-=======
 # Expose DogStatsD and supervisord ports
 EXPOSE 8125/udp 9001/tcp
 
->>>>>>> master
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
