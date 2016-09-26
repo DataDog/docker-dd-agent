@@ -5,18 +5,33 @@ This repository is meant to build the base image for a Datadog Agent container. 
 
 ## Quick Start
 
-The default image is ready-to-go. You just need to set your hostname and API_KEY in the environment.
+The default image is ready-to-go. You just need to set your API_KEY in the environment.
 
 ```
-docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
+docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
 ```
 
 If you are running on Amazon Linux, use the following instead:
 
 ```
-docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
+docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here}
 datadog/docker-dd-agent
 ```
+
+Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is smaller (about 60% the size of the Debian based one), and benefits from Alpine's security-oriented design.
+It is compatible with all options described in this file (dogstatsd only, enabling integrations, etc.).
+
+This image is available under tags with the following naming convention `classic_tag_name-alpine`. So for example to use the latest tag: `datadog/docker-dd-agent:latest-alpine` must be pulled. To use a specific version number, specify `11.2.583-alpine`.
+
+The Alpine version can be used this way:
+```
+docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent:alpine
+```
+
+**Note**: In this version, check configuration files must be stored in `/opt/datadog-agent/agent/conf.d/` instead of `/etc/dd-agent/conf.d/`.
+
+**Warning**: This version is recent, and while the main features have been tested, its behaviour may differ a little. If you find a bug, don't hesitate to open an issue, feedback about it is appreciated.
+
 
 ## Versioning
 
@@ -33,11 +48,16 @@ e.g. the first version of the Docker image that will bundle the Datadog Agent 5.
 
 ## Configuration
 
+### Hostname
+
+By default the agent container will use the `Name` field found in the `docker info` command from the host as a hostname. To change this behavior you can update the `hostname` field in `/etc/dd-agent/datadog.conf`. The easiest way for this is to use the `DD_HOSTNAME` environment variable (see below).
+
 ### Environment variables
 
-A few parameters can be changed with environment variables.
+A few parameters can be changed with environment variables:
 
-* `TAGS` set host tags. Add `-e TAGS="simple-tag-0,tag-key-1:tag-value-1"` to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
+* `DD_HOSTNAME` set the hostname (write it in `datadog.conf`)
+* `TAGS` set host tags. Add `-e TAGS=simple-tag-0,tag-key-1:tag-value-1` to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
 * `EC2_TAGS` set EC2 host tags. Add `-e EC2_TAGS=yes` to use EC2 custom host tags. Requires an [IAM role](https://github.com/DataDog/dd-agent/wiki/Capturing-EC2-tags-at-startup) associated with the instance.
 * `LOG_LEVEL` set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add `-e LOG_LEVEL=DEBUG` to turn logs to debug mode.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
@@ -48,6 +68,17 @@ A few parameters can be changed with environment variables.
 `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support right now.
 `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
 
+It is also possible to enable some checks this way:
+
+* `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works)
+* `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).
+* `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.
+
+**Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
+
+This change was introduced to ease the setup in environments where the environments variables are set globally. In such environments, generic variable names such as `TAGS` or `API_KEY` can lead to conflicts with the configuration of other containers.
+
+If the agent is installed in such an environment (Amazon Elastic Beanstalk for example), we recommend using the `DD_` prefixed variables to avoid configuration issues.
 
 ### Enabling integrations
 
@@ -62,7 +93,7 @@ To enable integrations you can write your YAML configuration files in the `/conf
 
 2. When creating the container, mount this new folder to `/conf.d`.
     ```
-    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -v /opt/dd-agent-conf.d:/conf.d:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
+    docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -v /opt/dd-agent-conf.d:/conf.d:ro -e API_KEY={your_api_key_here} datadog/docker-dd-agent
     ```
 
     _The important part here is `-v /opt/dd-agent-conf.d:/conf.d:ro`_
@@ -88,7 +119,7 @@ To configure specific settings of the agent straight in the image, you may need 
 3. Then run it like the `datadog/docker-dd-agent` image.
 
     ```
-    docker run -d --name dd-agent -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
+    docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock -v /proc/:/host/proc/:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} dd-agent-image
     ```
 
 4. It's done!
@@ -100,7 +131,13 @@ You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/mas
 
 To display information about the Agent's state with this command.
 
+debian:
+
 `docker exec dd-agent service datadog-agent info`
+
+alpine:
+
+`docker exec dd-agent /opt/datadog-agent/bin/agent info`
 
 Warning: the `docker exec` command is available only with Docker 1.3 and above.
 
@@ -118,7 +155,23 @@ Basic information about the Agent execution are available through the `logs` com
 
 `docker logs dd-agent`
 
+Exec a shell on the container and tail logs (collector.log, forwarder.log and jmxfetch.log) for debugging.  The supervisor.log is available there as well but you can get that from `docker logs dd-agent` from the host.
 
+alpine:
+
+```
+$ docker exec -it dd-agent ash 
+/opt/datadog-agent # tail -f /opt/datadog-agent/logs/dogstatsd.log 
+2016-07-22 23:09:09 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:210) | Flush #8: flushed 1 metric, 0 events, and 0 service check runs 
+```
+
+debian:
+
+```
+$ docker exec -it dd-agent bash
+# tail -f /var/log/datadog/dogstatsd.log
+2016-07-22 23:09:09 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:210) | Flush #8: flushed 1 metric, 0 events, and 0 service check runs 
+```
 ## DogStatsD
 
 ### Standalone DogStatsD
@@ -126,12 +179,14 @@ Basic information about the Agent execution are available through the `logs` com
 To run DogStatsD without the full Agent, add the `DOGSTATSD_ONLY` environment variable to the `docker run` command.
 
 ```
-docker run -d --name dogstatsd -h `hostname` -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} -e DOGSTATSD_ONLY=true datadog/docker-dd-agent
+docker run -d --name dogstatsd -v /var/run/docker.sock:/var/run/docker.sock -v /proc/mounts:/host/proc/mounts:ro -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro -e API_KEY={your_api_key_here} -e DOGSTATSD_ONLY=true datadog/docker-dd-agent
 ```
 
 This option allows you to run dogstatsd alone, without supervisor. One consequence of this is that the following command returns logs from dogstatsd directly instead of supervisor:
 
 `docker logs dogstatsd`
+
+**Note**: This will run DogStatsD only. Tags are collected from the configuration file and from the Docker labels in the collector process which is not running when using this option. Thus those tags will not be associated with any metrics and events processed by this container.
 
 ### DogStatsD from the host
 

@@ -1,0 +1,25 @@
+
+instances:
+   -   host: 172.17.42.1
+       port: 9999
+#        name: jmx_instance
+#        user: username
+#        password: password
+#        #java_bin_path: /path/to/java #Optional, should be set if the agent cannot find your java executable
+#        #trust_store_path: /path/to/trustStore.jks # Optional, should be set if ssl is enabled
+#        #trust_store_password: password
+#        tags:
+#             env: stage
+#             newTag: test
+
+
+init_config:
+    is_jmx: true
+    conf:
+        - include:
+            domain: '"kafka.server"'
+            bean: '"kafka.server":type="BrokerTopicMetrics",name="AllTopicsBytesOutPerSec"'
+            attribute:
+                MeanRate:
+                    metric_type: counter
+                    alias: kafka.net.bytes_out

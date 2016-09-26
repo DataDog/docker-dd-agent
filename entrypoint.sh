@@ -12,6 +12,10 @@ else
 	exit 1
 fi
 
+if [[ $DD_HOSTNAME ]]; then
+	sed -i -r -e "s/^# ?hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $DD_TAGS ]]; then
   export TAGS=${DD_TAGS}
 fi
@@ -21,7 +25,7 @@ if [[ $EC2_TAGS ]]; then
 fi
 
 if [[ $TAGS ]]; then
-	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
+	sed -i -r -e "s/^# ?tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_LOG_LEVEL ]]; then
@@ -49,7 +53,7 @@ if [[ $PROXY_USER ]]; then
 fi
 
 if [[ $PROXY_PASSWORD ]]; then
-    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_USER}/" /etc/dd-agent/datadog.conf
+    sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $SD_BACKEND ]]; then
@@ -76,13 +80,46 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
 fi
 
-find /conf.d -name '*.yaml' -exec cp {} /etc/dd-agent/conf.d \;
+if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
+    # expose supervisord as a health check
+    echo "
+[inet_http_server]
+port = 0.0.0.0:9001
+" >> /etc/dd-agent/supervisor.conf
+fi
+
+if [[ $KUBERNETES ]]; then
+    # enable kubernetes check
+    cp /etc/dd-agent/conf.d/kubernetes.yaml.example /etc/dd-agent/conf.d/kubernetes.yaml
+fi
+
+if [[ $MESOS_MASTER ]]; then
+    cp /etc/dd-agent/conf.d/mesos_master.yaml.example /etc/dd-agent/conf.d/mesos_master.yaml
+    cp /etc/dd-agent/conf.d/zk.yaml.example /etc/dd-agent/conf.d/zk.yaml
+
+    sed -i -e "s/localhost/leader.mesos/" /etc/dd-agent/conf.d/mesos_master.yaml
+    sed -i -e "s/localhost/leader.mesos/" /etc/dd-agent/conf.d/zk.yaml
+fi
+
+if [[ $MESOS_SLAVE ]]; then
+    cp /etc/dd-agent/conf.d/mesos_slave.yaml.example /etc/dd-agent/conf.d/mesos_slave.yaml
+
+    sed -i -e "s/localhost/$HOST/" /etc/dd-agent/conf.d/mesos_slave.yaml
+fi
+
+if [[ $MARATHON_URL ]]; then
+    cp /etc/dd-agent/conf.d/marathon.yaml.example /etc/dd-agent/conf.d/marathon.yaml
+    sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /etc/dd-agent/conf.d/marathon.yaml
+fi
+
+find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
 if [[ $DOGSTATSD_ONLY ]]; then
+        echo "[WARNING] This option is deprecated as of agent 5.8.0, it will be removed in the next few versions. Please use the dogstatsd image instead."
 		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
 else
 		exec "$@"
