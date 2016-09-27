@@ -12,7 +12,7 @@ docker run -d --name dogstatsd -h `hostname` -e API_KEY=YOUR_API_KEY datadog/doc
 
 ## Link to other containers
 
-Your other containers will probably want to send data to the DogStatsD container. For that, you will need to add a `--link` option to your run command.
+Your other containers will probably want to send data to the DogStatsD container. For that, you can use Docker networks, or add a `--link` option to your run command.
 
 ```
 docker run  --name my_container \
