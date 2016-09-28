@@ -21,7 +21,7 @@ if [[ $EC2_TAGS ]]; then
 fi
 
 if [[ $TAGS ]]; then
-	sed -i -e "s/^#tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
+	sed -i -r -e "s/^# ?tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $DD_LOG_LEVEL ]]; then
