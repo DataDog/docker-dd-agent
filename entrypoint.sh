@@ -40,6 +40,10 @@ if [[ $DD_URL ]]; then
     sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $NON_LOCAL_TRAFFIC ]]; then
+    sed -i -e 's/^# non_local_traffic:.*$/non_local_traffic: true/' /etc/dd-agent/datadog.conf
+fi
+
 if [[ $PROXY_HOST ]]; then
     sed -i -e "s/^# proxy_host:.*$/proxy_host: ${PROXY_HOST}/" /etc/dd-agent/datadog.conf
 fi
