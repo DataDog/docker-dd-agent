@@ -41,6 +41,12 @@ RUN cp "$DD_HOME/agent/datadog.conf.example" "$DD_HOME/agent/datadog.conf" \
   && rm "$DD_HOME/agent/conf.d/network.yaml.default" \
   && rm /tmp/setup_agent.sh
 
+# Healthcheck
+HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+  CMD test $($DD_HOME/venv/bin/python $DD_HOME/venv/bin/supervisorctl \
+      -c $DD_HOME/agent/supervisor.conf status | awk '{print $2}' | egrep -v 'RUNNING|EXITED' | wc -l) \
+      -eq 0 || exit 1
+
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]
 

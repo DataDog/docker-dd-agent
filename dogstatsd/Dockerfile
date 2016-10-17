@@ -33,6 +33,12 @@ RUN chmod g+w /etc/dd-agent/datadog.conf \
  && chmod g+w /etc/dd-agent \
  && chmod g+w /opt/datadog-agent/run/
 
+# Healthcheck
+HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+  CMD test $(/opt/datadog-agent/embedded/bin/python /opt/datadog-agent/bin/supervisorctl \
+      -c /etc/dd-agent/supervisor.conf status | awk '{print $2}' | egrep -v 'RUNNING|EXITED' | wc -l) \
+      -eq 0 || exit 1
+
 ENTRYPOINT ["/entrypoint.sh"]
 
 USER 1001
