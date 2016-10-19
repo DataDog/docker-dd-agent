@@ -72,6 +72,10 @@ if [[ $SD_TEMPLATE_DIR ]]; then
     sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $SD_JMX_ENABLE ]]; then
+    sed -i -e 's@^# sd_jmx_enable:.*$@sd_jmx_enable: '${SD_JMX_ENABLE}'@' /etc/dd-agent/datadog.conf
+fi
+
 if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
 fi
