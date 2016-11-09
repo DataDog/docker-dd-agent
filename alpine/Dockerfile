@@ -6,7 +6,7 @@ ENV DD_HOME=/opt/datadog-agent \
     # prevent the agent from being started after install
     DD_START_AGENT=0 \
     DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=5.9.1
+    AGENT_VERSION=5.10.0
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
