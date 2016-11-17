@@ -3,15 +3,13 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT yes
-ENV AGENT_VERSION 1:5.10.0-1
+ENV AGENT_VERSION 1:5.11.0-1
 
 # Install the Agent (manually)
 
-ADD datadog-agent_5.10.0-rpcready_amd64.deb /tmp/
-ADD jmxfetch-0.12.0-jar-with-dependencies.jar /tmp/
+ADD datadog-agent_5.11.0.git.7.21ac6e1-1_amd64.deb /tmp/
 
-RUN dpkg -i /tmp/datadog-agent_5.10.0-rpcready_amd64.deb && \
-    cp /tmp/jmxfetch-0.12.0-jar-with-dependencies.jar /opt/datadog-agent/agent/checks/libs/
+RUN dpkg -i /tmp/datadog-agent_5.11.0.git.7.21ac6e1-1_amd64.deb
 
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/webupd8team-java.list && \
     echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list.d/webupd8team-java.list && \
