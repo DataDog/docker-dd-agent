@@ -137,6 +137,8 @@ DogStatsD address and port will be available in `my_container`'s environment var
 
 Since the Agent container port 8125 should be linked to the host directly, you can connect to DogStatsD through the host. Usually the IP address of the host in a Docker container can be determined by looking at the address of the default route of this container with `ip route` for example. You can then configure your DogStatsD client to connect to `172.17.42.1:8125` for example.
 
+Note: As of Docker 1.9, you may need to update this to reflect the new gateway address: `172.17.0.1`. This can be especially important on an ECS-optimized instance where the DockerNet gateway address is needed.
+
 
 ## Build an image
 
