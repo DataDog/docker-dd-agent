@@ -95,6 +95,11 @@ if [[ $KUBERNETES ]]; then
     # WARNING: to avoid duplicates, only one agent at a time across the entire cluster should have this feature enabled.
     if [[ $KUBERNETES_COLLECT_EVENTS ]]; then
         sed -i -e "s@# collect_events: false@ collect_events: true@" /opt/datadog-agent/agent/conf.d/kubernetes.yaml
+
+        # enable the namespace regex
+        if [[ $KUBERNETES_NAMESPACE_NAME_REGEX ]]; then
+            sed -i -e "s@# namespace_name_regexp:@ namespace_name_regexp: ${KUBERNETES_NAMESPACE_NAME_REGEX}" /etc/dd-agent/conf.d/kubernetes.yaml
+        fi
     fi
 fi
 
