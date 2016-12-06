@@ -63,6 +63,7 @@ Some configuration parameters can be changed with environment variables:
 It is possible to enable some checks through the environment:
 
 * `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works). `KUBERNETES_COLLECT_EVENTS` enables event collection from the kubernetes API, given that `KUBERNETES` is also set. **Note:** only one agent should have `KUBERNETES_COLLECT_EVENTS` set per cluster.
+* the kubelet API endpoint is assumed to be the default route of the container, you can override the kubelet API endpoint by specifying `KUBERNETES_KUBELET_HOST` (eg. when using CNI networking, the kubelet API may not listen on the default route address)
 * `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).
 * `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.
 
