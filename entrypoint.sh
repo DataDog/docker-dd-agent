@@ -1,6 +1,9 @@
 #!/bin/bash
 #set -e
 
+
+##### Core config #####
+
 if [[ $DD_API_KEY ]]; then
   export API_KEY=${DD_API_KEY}
 fi
@@ -44,6 +47,13 @@ if [[ $NON_LOCAL_TRAFFIC ]]; then
     sed -i -e 's/^# non_local_traffic:.*$/non_local_traffic: true/' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $STATSD_METRIC_NAMESPACE ]]; then
+    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
+fi
+
+
+##### Proxy config #####
+
 if [[ $PROXY_HOST ]]; then
     sed -i -e "s/^# proxy_host:.*$/proxy_host: ${PROXY_HOST}/" /etc/dd-agent/datadog.conf
 fi
@@ -59,6 +69,9 @@ fi
 if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /etc/dd-agent/datadog.conf
 fi
+
+
+##### Service discovery #####
 
 if [[ $SD_BACKEND ]]; then
     sed -i -e "s/^# service_discovery_backend:.*$/service_discovery_backend: ${SD_BACKEND}/" /etc/dd-agent/datadog.conf
@@ -80,9 +93,12 @@ if [[ $SD_TEMPLATE_DIR ]]; then
     sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /etc/dd-agent/datadog.conf
 fi
 
-if [[ $STATSD_METRIC_NAMESPACE ]]; then
-    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
+if [[ $SD_CONSUL_TOKEN ]]; then
+    sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /etc/dd-agent/datadog.conf
 fi
+
+
+##### Integrations config #####
 
 if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
     # expose supervisord as a health check
@@ -125,6 +141,9 @@ fi
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
+
+
+##### Starting up #####
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
