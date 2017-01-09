@@ -89,6 +89,10 @@ if [[ $SD_TEMPLATE_DIR ]]; then
     sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $SD_CONSUL_TOKEN ]]; then
+    sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /opt/datadog-agent/agent/datadog.conf
+fi
+
 
 ##### Integrations config #####
 
