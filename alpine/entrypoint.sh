@@ -76,7 +76,7 @@ fi
 if [[ $SD_CONFIG_BACKEND ]]; then
     sed -i -e "s/^# sd_config_backend:.*$/sd_config_backend: ${SD_CONFIG_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
     # If no SD_BACKEND_HOST value is defined AND running in EC2 and host ip is available AND sd_backend is 'consul'
-    if [[ -z $SD_BACKEND_HOST && -n $EC2_HOST_IP && "$SD_CONFIG_BACKEND" == "consul" ]]; then
+    if [[ -z $SD_BACKEND_HOST && -n $EC2_HOST_IP ]]; then
         export SD_BACKEND_HOST="$EC2_HOST_IP"
     fi
 fi
