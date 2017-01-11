@@ -66,8 +66,8 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
-
 ##### Service discovery #####
+EC2_HOST_IP=`curl --silent http://169.254.169.254/latest/meta-data/local-ipv4 --max-time 1`
 
 if [[ $SD_BACKEND ]]; then
     sed -i -e "s/^# service_discovery_backend:.*$/service_discovery_backend: ${SD_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
@@ -75,6 +75,10 @@ fi
 
 if [[ $SD_CONFIG_BACKEND ]]; then
     sed -i -e "s/^# sd_config_backend:.*$/sd_config_backend: ${SD_CONFIG_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
+    # If no SD_BACKEND_HOST value is defined AND running in EC2 and host ip is available
+    if [[ -z $SD_BACKEND_HOST && -n $EC2_HOST_IP ]]; then
+        export SD_BACKEND_HOST="$EC2_HOST_IP"
+    fi
 fi
 
 if [[ $SD_BACKEND_HOST ]]; then
