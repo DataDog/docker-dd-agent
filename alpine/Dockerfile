@@ -19,10 +19,10 @@ COPY entrypoint.sh /entrypoint.sh
 EXPOSE 9001/tcp 8125/udp
 
 # Install minimal dependencies
-RUN apk add -qU --no-cache curl-dev python-dev tar sysstat
+RUN apk add -qU --no-cache curl curl-dev python-dev tar sysstat
 
 # Install build dependencies
-RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
+RUN apk add -qU --no-cache -t .build-deps gcc musl-dev pgcluster-dev linux-headers \
     # Install the agent
     && sh /tmp/setup_agent.sh \
     # Clean build dependencies
