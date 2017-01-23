@@ -2,7 +2,6 @@
 #set -e
 set -x
 
-
 ##### Core config #####
 
 if [[ $DD_API_KEY ]]; then
@@ -101,7 +100,7 @@ fi
 
 ##### Integrations config #####
 
-if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
+if [[ -n "${KUBERNETES}" || -n "${MESOS_MASTER}" || -n "${MESOS_SLAVE}" ]]; then
     # expose supervisord as a health check
     echo "
 [inet_http_server]
