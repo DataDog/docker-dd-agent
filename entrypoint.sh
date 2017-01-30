@@ -152,6 +152,16 @@ find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
+if [[ -z $DD_HOSTNAME && $DD_APM_ENABLED ]]; then
+        # When starting up the trace-agent without an explicit hostname
+        # we need to ensure that the trace-agent will report as the same host as the
+        # infrastructure agent.
+        # To do this, we execute some of dd-agent's python code and plug the hostname
+        # into the common configuration file
+        new_hostname=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
+	sed -i -r -e "s/^# ?hostname.*$/hostname: ${new_hostname}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $DOGSTATSD_ONLY ]]; then
         echo "[WARNING] This option is deprecated as of agent 5.8.0, it will be removed in the next few versions. Please use the dogstatsd image instead."
 		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
