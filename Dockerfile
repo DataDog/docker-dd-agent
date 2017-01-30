@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.10.1-1
+    AGENT_VERSION=1:5.11.0-1
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
@@ -14,7 +14,7 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Configure the Agent
-# 1. Listen to statsd from other containers
+# 1. Listen to statsd (8125) and traces (8126 and 7777) from other containers
 # 2. Turn syslog off
 # 3. Remove dd-agent user from supervisor configuration
 # 4. Remove dd-agent user from init.d configuration
@@ -37,7 +37,7 @@ COPY entrypoint.sh /entrypoint.sh
 VOLUME ["/conf.d", "/checks.d"]
 
 # Expose DogStatsD and supervisord ports
-EXPOSE 8125/udp 9001/tcp
+EXPOSE 8125/udp 9001/tcp 8126/tcp 7777/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
