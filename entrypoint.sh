@@ -156,10 +156,9 @@ if [[ -z $DD_HOSTNAME && $DD_APM_ENABLED ]]; then
         # When starting up the trace-agent without an explicit hostname
         # we need to ensure that the trace-agent will report as the same host as the
         # infrastructure agent.
-        # To do this, we execute some of dd-agent's python code and plug the hostname
-        # into the common configuration file
-        new_hostname=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
-	sed -i -r -e "s/^# ?hostname.*$/hostname: ${new_hostname}/" /etc/dd-agent/datadog.conf
+        # To do this, we execute some of dd-agent's python code and expose the hostname
+        # as an env var
+        export DD_HOSTNAME=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
 fi
 
 if [[ $DOGSTATSD_ONLY ]]; then
