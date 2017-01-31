@@ -36,7 +36,7 @@ COPY entrypoint.sh /entrypoint.sh
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]
 
-# Expose DogStatsD and supervisord ports
+# Expose DogStatsD, supervisord and trace-agent ports
 EXPOSE 8125/udp 9001/tcp 8126/tcp 7777/tcp
 
 # Healthcheck
