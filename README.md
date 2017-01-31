@@ -54,6 +54,7 @@ Some configuration parameters can be changed with environment variables:
    - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
    - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
+* `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
 
@@ -140,6 +141,62 @@ DogStatsD address and port will be available in `my_container`'s environment var
 
 Since the Agent container port 8125 should be linked to the host directly, you can connect to DogStatsD through the host. Usually the IP address of the host in a Docker container can be determined by looking at the address of the default route of this container with `ip route` for example. You can then configure your DogStatsD client to connect to `172.17.42.1:8125` for example.
 
+
+## Tracing + APM
+
+Enable the (datadog-trace-agent)[https://github.com/DataDog/datadog-trace-agent] in the `docker-dd-agent` container by passing
+`DD_APM_ENABLED=true` as an environment variable
+
+### Tracing from the host
+
+Tracing can be available on port 8126/tcp from anywhere by adding the option `-p 8126:8126/tcp` to the `docker run` command
+
+To make it available from your host only, use `-p 127.0.0.1:8126:8126/tcp` instead.
+
+For example, the following command will allow the agent to receive traces from anywhere
+
+```
+docker run -d --name dd-agent \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /proc/:/host/proc/:ro \
+  -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+  -e API_KEY={your_api_key_here} \
+  -e DD_APM_ENABLED=true \
+  -p 8126:8126/tcp \
+  datadog/docker-dd-agent
+```
+
+### Tracing from other containers
+As with DogStatsD, traces can be submitted to the agent from other containers either
+using the Docker host IP or with Docker links
+
+#### Using Docker links
+```
+docker run  --name my_container           \
+            --all_your_flags              \
+            --link dd-agent:dd-agent    \
+            my_image
+```
+will expose `DD_AGENT_PORT_8126_TCP_ADDR` and `DD_AGENT_PORT_8126_TCP_PORT` as environment variables. Your application tracer can be configured to submit to this address.
+
+An example in Python:
+```
+import os
+from ddtrace import tracer
+tracer.configure(
+    hostname=os.environ["DD_AGENT_PORT_8126_TCP_ADDR"],
+    port=os.environ["DD_AGENT_PORT_8126_TCP_PORT"]
+)
+```
+
+#### Using Docker host IP
+
+Agent container port 8126 should be linked to the host directly, Having determined the address of the default route of this container, with `ip route` for example, you can configure your application tracer to report to it.
+
+An example in python, assuming `172.17.0.1` is the default route:
+```
+from ddtrace import tracer; tracer.configure(hostname="172.17.0.1", port=8126)
+```
 
 ## Build an image
 
