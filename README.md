@@ -162,9 +162,13 @@ docker run -d --name dd-agent \
   -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
   -e API_KEY={your_api_key_here} \
   -e DD_APM_ENABLED=true \
-  -p 8126:8126/tcp \
+  -p 8126:8126/tcp -p 7777:7777/tcp \
   datadog/docker-dd-agent
 ```
+
+Port 7777 is a legacy port used by former client libraries and is being replaced by 8126.
+As a transition, it is safer to expose both ports, unless you explicitely parameter your
+client code to use port 8126, or make sure your client library uses 8126 by default.
 
 ### Tracing from other containers
 As with DogStatsD, traces can be submitted to the agent from other containers either
