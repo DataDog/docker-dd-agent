@@ -6,7 +6,7 @@ ENV DD_HOME=/opt/datadog-agent \
     DOCKER_DD_AGENT=yes \
     # prevent the agent from being started after install
     DD_START_AGENT=0 \
-    AGENT_VERSION=5.10.1
+    AGENT_VERSION=5.11.0
 
 # Add install and config files
 ADD https://raw.githubusercontent.com/DataDog/dd-agent/$AGENT_VERSION/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
