@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.11.0-1
+    AGENT_VERSION=1:5.11.1-1
 
 COPY entrypoint.sh supervisor.conf /
 
