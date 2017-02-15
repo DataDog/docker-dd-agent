@@ -5,12 +5,11 @@ MAINTAINER Datadog <package@datadoghq.com>
 ENV DOCKER_DD_AGENT=yes \
     AGENT_VERSION=1:5.11.2-1
 
-COPY entrypoint.sh supervisor.conf /
-
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
  && apt-get update \
+ && apt-get install --no-install-recommends -y openjdk-7-jre-headless \
  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -18,20 +17,28 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
 # Configure the Agent
 # 1. Listen to statsd from other containers
 # 2. Turn syslog off
-# 3. Use custom supervisor.conf
+# 3. Remove dd-agent user from supervisor configuration
+# 4. Remove dd-agent user from init.d configuration
+# 5. Fix permission on /etc/init.d/datadog-agent
+# 6. Remove network check
 RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  && sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" /etc/dd-agent/datadog.conf \
  && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf \
- && mv /supervisor.conf /etc/dd-agent/supervisor.conf
+ && sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf \
+ && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
+ && chmod +x /etc/init.d/datadog-agent \
+ && rm /etc/dd-agent/conf.d/network.yaml.default
 
-# Expose supervisor and DogStatsD port
-EXPOSE 9001/tcp 8125/udp
+# Add Docker check
+COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 
-# Set proper permissions to allow running as a non-root user
-RUN chmod g+w /etc/dd-agent/datadog.conf \
- && chmod -R g+w /var/log/datadog \
- && chmod g+w /etc/dd-agent \
- && chmod g+w /opt/datadog-agent/run/
+COPY entrypoint.sh /entrypoint.sh
+
+# Extra conf.d and checks.d
+VOLUME ["/conf.d", "/checks.d"]
+
+# Expose DogStatsD and supervisord ports
+EXPOSE 8125/udp 9001/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
@@ -40,7 +47,4 @@ HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
       -eq 0 || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
-
-USER 1001
-
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]

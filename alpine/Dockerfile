@@ -6,7 +6,8 @@ ENV DD_HOME=/opt/datadog-agent \
     # prevent the agent from being started after install
     DD_START_AGENT=0 \
     DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=5.10.1
+    PYCURL_SSL_LIBRARY=openssl \
+    AGENT_VERSION=5.11.2
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
@@ -19,10 +20,10 @@ COPY entrypoint.sh /entrypoint.sh
 EXPOSE 9001/tcp 8125/udp
 
 # Install minimal dependencies
-RUN apk add -qU --no-cache curl-dev python-dev tar sysstat
+RUN apk add -qU --no-cache coreutils curl curl-dev python-dev tar sysstat
 
 # Install build dependencies
-RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
+RUN apk add -qU --no-cache -t .build-deps gcc musl-dev pgcluster-dev linux-headers \
     # Install the agent
     && sh /tmp/setup_agent.sh \
     # Clean build dependencies

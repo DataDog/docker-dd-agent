@@ -121,13 +121,7 @@ if [[ $KUBERNETES ]]; then
     # WARNING: to avoid duplicates, only one agent at a time across the entire cluster should have this feature enabled.
     if [[ $KUBERNETES_COLLECT_EVENTS ]]; then
         sed -i -e "s@# collect_events: false@ collect_events: true@" /etc/dd-agent/conf.d/kubernetes.yaml
-
-        # enable the namespace regex
-        if [[ $KUBERNETES_NAMESPACE_NAME_REGEX ]]; then
-            sed -i -e "s@# namespace_name_regexp:@ namespace_name_regexp: ${KUBERNETES_NAMESPACE_NAME_REGEX}" /etc/dd-agent/conf.d/kubernetes.yaml
-        fi
     fi
-
 fi
 
 if [[ $MESOS_MASTER ]]; then
@@ -157,15 +151,6 @@ find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 ##### Starting up #####
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
-
-if [[ -z $DD_HOSTNAME && $DD_APM_ENABLED ]]; then
-        # When starting up the trace-agent without an explicit hostname
-        # we need to ensure that the trace-agent will report as the same host as the
-        # infrastructure agent.
-        # To do this, we execute some of dd-agent's python code and expose the hostname
-        # as an env var
-        export DD_HOSTNAME=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
-fi
 
 if [[ $DOGSTATSD_ONLY ]]; then
         echo "[WARNING] This option is deprecated as of agent 5.8.0, it will be removed in the next few versions. Please use the dogstatsd image instead."

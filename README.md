@@ -48,10 +48,13 @@ Some configuration parameters can be changed with environment variables:
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 * `NON_LOCAL_TRAFFIC` tells the image to set the `non_local_traffic: true` option, which enables statsd reporting from any external ip. You may find this useful to report metrics from your other containers. See [network configuration](https://github.com/DataDog/dd-agent/wiki/Network-Traffic-and-Proxy-Configuration) for more details.
 * ~~`DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.~~ **[deprecated]: please use [the dogstatsd-only image](#standalone-dogstatsd)**
-* `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT` and `SD_TEMPLATE_DIR` configure service discovery.
-`SD_BACKEND` can only be set to `docker` for now, since service discovery works only with docker containers.
-`SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support right now.
-`SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
+* `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR` and `SD_CONSUL_TOKEN` configure service discovery:
+
+   - `SD_BACKEND` can only be set to `docker` for now, since service discovery works only with docker containers.
+   - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
+   - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
+   - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
+* `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
 
@@ -62,7 +65,8 @@ Some configuration parameters can be changed with environment variables:
 
 It is possible to enable some checks through the environment:
 
-* `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works)
+* `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works). `KUBERNETES_COLLECT_EVENTS` enables event collection from the kubernetes API, given that `KUBERNETES` is also set. **Note:** only one agent should have `KUBERNETES_COLLECT_EVENTS` set per cluster.
+* the kubelet API endpoint is assumed to be the default route of the container, you can override the kubelet API endpoint by specifying `KUBERNETES_KUBELET_HOST` (eg. when using CNI networking, the kubelet API may not listen on the default route address)
 * `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).
 * `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.
 
@@ -137,6 +141,66 @@ DogStatsD address and port will be available in `my_container`'s environment var
 
 Since the Agent container port 8125 should be linked to the host directly, you can connect to DogStatsD through the host. Usually the IP address of the host in a Docker container can be determined by looking at the address of the default route of this container with `ip route` for example. You can then configure your DogStatsD client to connect to `172.17.42.1:8125` for example.
 
+
+## Tracing + APM
+
+Enable the [datadog-trace-agent](https://github.com/DataDog/datadog-trace-agent) in the `docker-dd-agent` container by passing
+`DD_APM_ENABLED=true` as an environment variable
+
+### Tracing from the host
+
+Tracing can be available on ports 7777/tcp and 8126/tcp from anywhere by adding the options `-p 7777:7777/tcp -p 8126:8126/tcp` to the `docker run` command
+
+To make it available from your host only, use `-p 127.0.0.1:7777:7777/tcp -p 127.0.0.1:8126:8126/tcp` instead.
+
+For example, the following command will allow the agent to receive traces from anywhere
+
+```
+docker run -d --name dd-agent \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /proc/:/host/proc/:ro \
+  -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+  -e API_KEY={your_api_key_here} \
+  -e DD_APM_ENABLED=true \
+  -p 8126:8126/tcp -p 7777:7777/tcp \
+  datadog/docker-dd-agent
+```
+
+Port 7777 is a legacy port used by former client libraries and is being replaced by 8126.
+For now, it is safer to expose both ports, unless you explicitly configure your
+client to use port 8126. Future client libraries will report to port 8126 by default.
+
+### Tracing from other containers
+As with DogStatsD, traces can be submitted to the agent from other containers either
+using the Docker host IP or with Docker links
+
+#### Using Docker links
+```
+docker run  --name my_container           \
+            --all_your_flags              \
+            --link dd-agent:dd-agent    \
+            my_image
+```
+will expose `DD_AGENT_PORT_8126_TCP_ADDR` and `DD_AGENT_PORT_8126_TCP_PORT` as environment variables. Your application tracer can be configured to submit to this address.
+
+An example in Python:
+```
+import os
+from ddtrace import tracer
+tracer.configure(
+    hostname=os.environ["DD_AGENT_PORT_8126_TCP_ADDR"],
+    port=os.environ["DD_AGENT_PORT_8126_TCP_PORT"]
+)
+```
+
+#### Using Docker host IP
+
+Agent container port 8126 should be linked to the host directly, Having determined the address of the default route of this container, with `ip route` for example, you can configure your application tracer to report to it.
+
+An example in python, assuming `172.17.0.1` is the default route:
+```
+from ddtrace import tracer; tracer.configure(hostname="172.17.0.1", port=8126)
+```
 
 ## Build an image
 

@@ -1,5 +1,8 @@
 #!/bin/sh
 #set -e
+set -x
+
+##### Core config #####
 
 if [[ $DD_API_KEY ]]; then
   export API_KEY=${DD_API_KEY}
@@ -40,6 +43,13 @@ if [[ $DD_URL ]]; then
     sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $STATSD_METRIC_NAMESPACE ]]; then
+    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
+
+##### Proxy config #####
+
 if [[ $PROXY_HOST ]]; then
     sed -i -e "s/^# proxy_host:.*$/proxy_host: ${PROXY_HOST}/" /opt/datadog-agent/agent/datadog.conf
 fi
@@ -56,12 +66,19 @@ if [[ $PROXY_PASSWORD ]]; then
     sed -i -e "s/^# proxy_password:.*$/proxy_password: ${PROXY_PASSWORD}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
+##### Service discovery #####
+EC2_HOST_IP=`curl --silent http://169.254.169.254/latest/meta-data/local-ipv4 --max-time 1`
+
 if [[ $SD_BACKEND ]]; then
     sed -i -e "s/^# service_discovery_backend:.*$/service_discovery_backend: ${SD_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
 if [[ $SD_CONFIG_BACKEND ]]; then
     sed -i -e "s/^# sd_config_backend:.*$/sd_config_backend: ${SD_CONFIG_BACKEND}/" /opt/datadog-agent/agent/datadog.conf
+    # If no SD_BACKEND_HOST value is defined AND running in EC2 and host ip is available
+    if [[ -z $SD_BACKEND_HOST && -n $EC2_HOST_IP ]]; then
+        export SD_BACKEND_HOST="$EC2_HOST_IP"
+    fi
 fi
 
 if [[ $SD_BACKEND_HOST ]]; then
@@ -76,11 +93,14 @@ if [[ $SD_TEMPLATE_DIR ]]; then
     sed -i -e 's@^# sd_template_dir:.*$@sd_template_dir: '${SD_TEMPLATE_DIR}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
-if [[ $STATSD_METRIC_NAMESPACE ]]; then
-    sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /opt/datadog-agent/agent/datadog.conf
+if [[ $SD_CONSUL_TOKEN ]]; then
+    sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
-if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
+
+##### Integrations config #####
+
+if [[ -n "${KUBERNETES}" || -n "${MESOS_MASTER}" || -n "${MESOS_SLAVE}" ]]; then
     # expose supervisord as a health check
     echo "
 [inet_http_server]
@@ -89,6 +109,7 @@ port = 0.0.0.0:9001
 fi
 
 if [[ $KUBERNETES ]]; then
+    # enable kubernetes check
     cp /opt/datadog-agent/agent/conf.d/kubernetes.yaml.example /opt/datadog-agent/agent/conf.d/kubernetes.yaml
 
     # enable event collector
@@ -125,6 +146,9 @@ fi
 find /conf.d -name '*.yaml' -exec cp --parents {} /opt/datadog-agent/agent \;
 
 find /checks.d -name '*.py' -exec cp {} /opt/datadog-agent/agent/checks.d \;
+
+
+##### Starting up #####
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
 
