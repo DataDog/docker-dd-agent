@@ -7,7 +7,7 @@ This repository is meant to build the image for a DogStatsD container.
 This image is ready-to-go, you just need to set your hostname and `API_KEY` in the environment.
 
 ```
-docker run -d --name dogstatsd -h `hostname` -e API_KEY=YOUR_API_KEY datadog/docker-dogstatsd
+docker run -d --name dogstatsd -h `hostname` -e API_KEY=YOUR_API_KEY datadog/docker-dd-agent:latest-dogstatsd
 ```
 
 ## Link to other containers
