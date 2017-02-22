@@ -13,6 +13,7 @@ docker run -d --name dd-agent \
   -v /proc/:/host/proc/:ro \
   -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
   -e API_KEY={your_api_key_here} \
+  -e SD_BACKEND=docker \
   datadog/docker-dd-agent
 ```
 
@@ -24,6 +25,7 @@ docker run -d --name dd-agent \
   -v /proc/:/host/proc/:ro \
   -v /cgroup/:/host/sys/fs/cgroup:ro \
   -e API_KEY={your_api_key_here} \
+  -e SD_BACKEND=docker \
   datadog/docker-dd-agent
 ```
 
@@ -34,6 +36,15 @@ docker run -d --name dd-agent \
 ### Hostname
 
 By default the agent container will use the `Name` field found in the `docker info` command from the host as a hostname. To change this behavior you can update the `hostname` field in `/etc/dd-agent/datadog.conf`. The easiest way for this is to use the `DD_HOSTNAME` environment variable (see below).
+
+
+### Service discovery
+
+The commands we suggest in _Quick Start_ start service discovery in auto config mode. It means the agent will try and detect containers running [some images](https://github.com/DataDog/dd-agent/tree/5.11.2/conf.d/auto_conf) for which we provide a default check that works most of the time.
+
+If you want to disable it, simply remove the `SD_BACKEND` environment variable.
+
+If you want to learn more about it and how to configure it, head to the [service discovery guide](https://docs.datadoghq.com/guides/servicediscovery/).
 
 
 ### Environment variables
@@ -72,7 +83,7 @@ It is possible to enable some checks through the environment:
 
 #### Service discovery
 
-Another way to enable checks is through service discovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS or Docker Swarm. More details about this feature can be found [in the doc](http://docs.datadoghq.com/guides/servicediscovery/).
+Another way to enable checks is through service discovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS or Docker Swarm. More details about this feature can be found [in the doc](https://docs.datadoghq.com/guides/servicediscovery/).
 
 #### Configuration files
 
@@ -337,4 +348,4 @@ Also, several integrations might be incomplete. See the "Contribute" section.
 
 ## Contribute
 
-If you notice a limitation or a bug with this container, feel free to open a [Github issue](https://github.com/DataDog/docker-dd-agent/issues). If it concerns the Agent itself, please refer to its [documentation](http://docs.datadoghq.com/) or its [wiki](https://github.com/DataDog/dd-agent/wiki).
+If you notice a limitation or a bug with this container, feel free to open a [Github issue](https://github.com/DataDog/docker-dd-agent/issues). If it concerns the Agent itself, please refer to its [documentation](https://docs.datadoghq.com/) or its [wiki](https://github.com/DataDog/dd-agent/wiki).
