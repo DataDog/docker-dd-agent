@@ -38,6 +38,12 @@ docker run -d --name dd-agent \
 By default the agent container will use the `Name` field found in the `docker info` command from the host as a hostname. To change this behavior you can update the `hostname` field in `/etc/dd-agent/datadog.conf`. The easiest way for this is to use the `DD_HOSTNAME` environment variable (see below).
 
 
+### CGroups
+
+For the Docker check to succeed, memory management by cgroup must be enabled on the host as explained in the [debian wiki](https://wiki.debian.org/LXC#Preparing_the_host_system_for_running_LXC).
+On Debian Jessie or later for example you will need to add `cgroup_enable=memory swapaccount=1` to your boot options, otherwise the agent won't be able to recognize your system. See [this thread](https://askubuntu.com/questions/19486/how-do-i-add-a-kernel-boot-parameter/19487#19487) for details.
+
+
 ### Service discovery
 
 The commands we suggest in _Quick Start_ start service discovery in auto config mode. It means the agent will try and detect containers running [some images](https://github.com/DataDog/dd-agent/tree/5.11.2/conf.d/auto_conf) for which we provide a default check that works most of the time.
