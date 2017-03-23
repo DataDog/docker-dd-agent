@@ -9,7 +9,7 @@ ENV DD_HOME=/opt/datadog-agent \
     AGENT_VERSION=5.12.0
 
 # Add install and config files
-ADD https://raw.githubusercontent.com/DataDog/dd-agent/$AGENT_VERSION/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
+ADD https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
 COPY entrypoint.sh supervisor.conf /
 
 # Expose supervisor and DogStatsD port
