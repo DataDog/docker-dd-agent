@@ -40,7 +40,7 @@ RUN cp "$DD_HOME/agent/datadog.conf.example" "$DD_HOME/agent/datadog.conf" \
   && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" "$DD_HOME/agent/datadog.conf" \
   && sed -i "/user=dd-agent/d" "$DD_HOME/agent/supervisor.conf" \
   && rm "$DD_HOME/agent/conf.d/network.yaml.default" \
-  && rm /tmp/setup_agent.sh
+  || rm /tmp/setup_agent.sh
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
