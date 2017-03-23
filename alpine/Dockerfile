@@ -33,14 +33,13 @@ RUN apk add -qU --no-cache -t .build-deps gcc musl-dev pgcluster-dev linux-heade
 # 1. Listen to statsd from other containers
 # 2. Turn syslog off
 # 3. Remove dd-agent user from supervisor configuration
-# 4. Remove network check
-# 6. Remove setup script
+# 4. Remove setup script
 RUN cp "$DD_HOME/agent/datadog.conf.example" "$DD_HOME/agent/datadog.conf" \
   && sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" "$DD_HOME/agent/datadog.conf" \
   && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" "$DD_HOME/agent/datadog.conf" \
   && sed -i "/user=dd-agent/d" "$DD_HOME/agent/supervisor.conf" \
   && rm "$DD_HOME/agent/conf.d/network.yaml.default" \
-  && rm /tmp/setup_agent.sh
+  || rm /tmp/setup_agent.sh
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
