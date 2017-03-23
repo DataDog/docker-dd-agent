@@ -13,7 +13,7 @@ ENV DD_HOME=/opt/datadog-agent \
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
 
 # Add install and config files
-ADD https://raw.githubusercontent.com/DataDog/dd-agent/$AGENT_VERSION/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
+ADD https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
 COPY entrypoint.sh /entrypoint.sh
 
 # Expose supervisor and DogStatsD port
