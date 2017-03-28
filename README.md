@@ -256,7 +256,7 @@ You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/mas
 ## Alpine-based image
 
 Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is smaller (about 60% the size of the Debian based one), and benefits from Alpine's security-oriented design.
-It is compatible with all options described in this file (service discovery, enabling specific integrations, etc.) with the excception of Tracing and APM (the trace-agent does not ship in the Alpine images).
+It is compatible with all options described in this file (service discovery, enabling specific integrations, etc.) with the exception of Tracing and APM (the trace-agent does not ship with the Alpine images).
 
 This image is available under tags with the following naming convention `usual_tag_name-alpine`. So for example to use the latest tag: `datadog/docker-dd-agent:latest-alpine` must be pulled. To use a specific version number, specify `11.2.583-alpine`.
 
