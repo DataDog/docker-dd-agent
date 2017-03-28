@@ -71,7 +71,7 @@ Some configuration parameters can be changed with environment variables:
    - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
    - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
-* `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp
+* `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
 
@@ -164,6 +164,8 @@ Since the Agent container port 8125 should be linked to the host directly, you c
 Enable the [datadog-trace-agent](https://github.com/DataDog/datadog-trace-agent) in the `docker-dd-agent` container by passing
 `DD_APM_ENABLED=true` as an environment variable
 
+**Note: APM is NOT available on Alpine Images**
+
 ### Tracing from the host
 
 Tracing can be available on ports 7777/tcp and 8126/tcp from anywhere by adding the options `-p 7777:7777/tcp -p 8126:8126/tcp` to the `docker run` command
@@ -254,7 +256,7 @@ You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/mas
 ## Alpine-based image
 
 Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is smaller (about 60% the size of the Debian based one), and benefits from Alpine's security-oriented design.
-It is compatible with all options described in this file (service discovery, enabling specific integrations, etc.).
+It is compatible with all options described in this file (service discovery, enabling specific integrations, etc.) with the exception of Tracing and APM (the trace-agent does not ship with the Alpine images).
 
 This image is available under tags with the following naming convention `usual_tag_name-alpine`. So for example to use the latest tag: `datadog/docker-dd-agent:latest-alpine` must be pulled. To use a specific version number, specify `11.2.583-alpine`.
 
