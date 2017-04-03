@@ -119,7 +119,7 @@ if [[ $KUBERNETES ]]; then
 
         # enable the namespace regex
         if [[ $KUBERNETES_NAMESPACE_NAME_REGEX ]]; then
-            sed -i -e "s@# namespace_name_regexp:@ namespace_name_regexp: ${KUBERNETES_NAMESPACE_NAME_REGEX}" /etc/dd-agent/conf.d/kubernetes.yaml
+            sed -i -e "s@# namespace_name_regexp:@ namespace_name_regexp: ${KUBERNETES_NAMESPACE_NAME_REGEX}" /opt/datadog-agent/agent/conf.d/kubernetes.yaml
         fi
     fi
 fi
