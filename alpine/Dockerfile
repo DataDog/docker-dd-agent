@@ -20,7 +20,7 @@ COPY entrypoint.sh /entrypoint.sh
 EXPOSE 9001/tcp 8125/udp
 
 # Install minimal dependencies
-RUN apk add -qU --no-cache coreutils curl curl-dev python-dev tar sysstat
+RUN apk add -qU --no-cache coreutils curl curl-dev python-dev tar sysstat tini
 
 # Install build dependencies
 RUN apk add -qU --no-cache -t .build-deps gcc musl-dev pgcluster-dev linux-headers \
@@ -50,7 +50,7 @@ HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "-g", "--", "/entrypoint.sh"]
 
 WORKDIR "$DD_HOME"
 CMD source venv/bin/activate && supervisord -c agent/supervisor.conf
