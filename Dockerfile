@@ -35,6 +35,9 @@ COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 # Add Kubernetes check
 COPY conf.d/kubernetes.yaml /etc/dd-agent/conf.d/kubernetes.yaml
 
+# Apply Docker backports
+COPY docker.py /etc/dd-agent/checks.d/docker.py
+
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
