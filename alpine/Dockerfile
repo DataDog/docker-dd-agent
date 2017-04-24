@@ -7,7 +7,7 @@ ENV DD_HOME=/opt/datadog-agent \
     DD_START_AGENT=0 \
     DOCKER_DD_AGENT=yes \
     PYCURL_SSL_LIBRARY=openssl \
-    AGENT_VERSION=5.12.3
+    AGENT_VERSION=5.13.0
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml "$DD_HOME/agent/conf.d/docker_daemon.yaml"
