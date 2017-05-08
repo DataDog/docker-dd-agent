@@ -168,9 +168,9 @@ Enable the [datadog-trace-agent](https://github.com/DataDog/datadog-trace-agent)
 
 ### Tracing from the host
 
-Tracing can be available on ports 7777/tcp and 8126/tcp from anywhere by adding the options `-p 7777:7777/tcp -p 8126:8126/tcp` to the `docker run` command
+Tracing can be available on port 8126/tcp from anywhere by adding the options `-p 8126:8126/tcp` to the `docker run` command
 
-To make it available from your host only, use `-p 127.0.0.1:7777:7777/tcp -p 127.0.0.1:8126:8126/tcp` instead.
+To make it available from your host only, use `-p 127.0.0.1:8126:8126/tcp` instead.
 
 For example, the following command will allow the agent to receive traces from anywhere
 
@@ -181,13 +181,12 @@ docker run -d --name dd-agent \
   -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
   -e API_KEY={your_api_key_here} \
   -e DD_APM_ENABLED=true \
-  -p 8126:8126/tcp -p 7777:7777/tcp \
+  -p 8126:8126/tcp \
   datadog/docker-dd-agent
 ```
 
-Port 7777 is a legacy port used by former client libraries and is being replaced by 8126.
-For now, it is safer to expose both ports, unless you explicitly configure your
-client to use port 8126. Future client libraries will report to port 8126 by default.
+Previous instructions required binding to port 7777.
+This is a legacy port used by former client libraries and has been replaced by 8126.
 
 ### Tracing from other containers
 As with DogStatsD, traces can be submitted to the agent from other containers either
