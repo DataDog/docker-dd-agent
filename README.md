@@ -129,6 +129,7 @@ These separate images have the advantage of running DogStatsD server as a non-ro
 
 **Note**: These images run DogStatsD only. In the agent, tags are collected from the configuration file and from labels by the collector which is not running here. Thus those tags will not be associated with any metrics and events processed by this container.
 
+**Note**: Optionally, the standalone DogStatsD image can also run the the trace-agent process. Pass `-e DD_APM_ENABLED=true` to your `docker run` command to activate the trace-agent and allow your container to receive traces from Datadog's APM integrations.
 
 ### DogStatsD from the host
 
