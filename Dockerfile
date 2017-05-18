@@ -45,5 +45,7 @@ HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
       -c /etc/dd-agent/supervisor.conf status | awk '{print $2}' | egrep -v 'RUNNING|EXITED' | wc -l) \
       -eq 0 || exit 1
 
+ADD patches/checks.d/* /opt/datadog-agent/agent/checks.d/
+
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
