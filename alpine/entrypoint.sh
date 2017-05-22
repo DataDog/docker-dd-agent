@@ -135,12 +135,17 @@ fi
 if [[ $MESOS_SLAVE ]]; then
     cp /opt/datadog-agent/agent/conf.d/mesos_slave.yaml.example /opt/datadog-agent/agent/conf.d/mesos_slave.yaml
 
-    sed -i -e "s/localhost/$HOST/" /opt/datadog-agent/agent/conf.d/mesos_slave.yaml
+    sed -i -e "s/localhost/${HOST}/" /opt/datadog-agent/agent/conf.d/mesos_slave.yaml
 fi
 
 if [[ $MARATHON_URL ]]; then
     cp /opt/datadog-agent/agent/conf.d/marathon.yaml.example /opt/datadog-agent/agent/conf.d/marathon.yaml
     sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /opt/datadog-agent/agent/conf.d/marathon.yaml
+fi
+
+if [[ $KONG ]]; then
+    cp /opt/datadog-agent/agent/conf.d/kong.yaml.example /opt/datadog-agent/agent/conf.d/kong.yaml
+    sed -i -e "s/localhost/${HOST}/g" /opt/datadog-agent/agent/conf.d/kong.yaml
 fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /opt/datadog-agent/agent \;
