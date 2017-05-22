@@ -167,6 +167,11 @@ if [[ $KONG ]]; then
     sed -i -e "s/localhost/${HOST}/g" /etc/dd-agent/conf.d/kong.yaml
 fi
 
+if [[ $USE_MOUNT ]]; then
+    cp /etc/dd-agent/conf.d/kong.yaml.example /etc/dd-agent/conf.d/kong.yaml
+    sed -i -e "s/use_mount: no/use_mount: yes/" /etc/dd-agent/conf.d/kong.yaml
+fi
+
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
 
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;

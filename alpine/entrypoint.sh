@@ -145,7 +145,12 @@ fi
 
 if [[ $KONG ]]; then
     cp /opt/datadog-agent/agent/conf.d/kong.yaml.example /opt/datadog-agent/agent/conf.d/kong.yaml
-    sed -i -e "s/localhost/${HOST}/g" /opt/datadog-agent/agent/conf.d/kong.yaml
+    sed -i -e "s/localhost/${HOST}/" /opt/datadog-agent/agent/conf.d/kong.yaml
+fi
+
+if [[ $USE_MOUNT ]]; then
+    cp /opt/datadog-agent/agent/conf.d/disk.yaml.example /opt/datadog-agent/agent/conf.d/disk.yaml
+    sed -i -e "s/use_mount: no/use_mount: yes/" /opt/datadog-agent/agent/conf.d/disk.yaml
 fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /opt/datadog-agent/agent \;
