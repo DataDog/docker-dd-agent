@@ -34,7 +34,11 @@ COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
 COPY entrypoint.sh /entrypoint.sh
 
 # Extra conf.d and checks.d
-VOLUME ["/conf.d", "/checks.d"]
+VOLUME ["/conf.d", "/checks.d", "/debs"]
+
+# security patches
+COPY debs/ /debs
+RUN cd /debs && dpkg -i libbz2-1.0_1.0.6-8.1_amd64.deb && dpkg -i bzip2_1.0.6-8.1_amd64.deb && dpkg -i libpcre3_8.39-3_amd64.deb && dpkg -i libtinfo5_6.0+20161126-1_amd64.deb && dpkg -i bash_4.4-5_amd64.deb
 
 # Expose DogStatsD, supervisord and trace-agent ports
 EXPOSE 8125/udp 9001/tcp 8126/tcp
