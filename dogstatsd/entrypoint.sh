@@ -17,9 +17,20 @@ if [[ $DD_URL ]]; then
 fi
 
 # ensure that the trace-agent doesn't run unless instructed to
-export DD_APM_ENABLED=false
 if [[ $DD_APM_ENABLED ]]; then
-  export DD_APM_ENABLED=${DD_APM_ENABLED}
+    export DD_APM_ENABLED=${DD_APM_ENABLED}
+ else 
+    # disable the agent when the env var is absent
+    export DD_APM_ENABLED=false
+ fi
+
+if [[ -z $DD_HOSTNAME && $DD_APM_ENABLED ]]; then
+        # When starting up the trace-agent without an explicit hostname
+        # we need to ensure that the trace-agent will report as the same host as the
+        # infrastructure agent.
+        # To do this, we execute some of dd-agent's python code and expose the hostname
+        # as an env var
+        export DD_HOSTNAME=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
 fi
 
 export PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:$PATH"
