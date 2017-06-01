@@ -27,6 +27,10 @@ if [[ $EC2_TAGS ]]; then
 	sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $RANCHER_HOST_LABELS ]]; then
+	sed -i -e "s/^# collect_rancher_host_labels.*$/collect_rancher_host_labels: ${RANCHER_HOST_LABELS}/" /etc/dd-agent/datadog.conf
+fi
+
 if [[ $TAGS ]]; then
 	sed -i -r -e "s/^# ?tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
