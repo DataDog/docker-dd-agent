@@ -47,6 +47,10 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $USE_DOGSTATSD ]]; then
+    sed -i -e "s/^.*use_dogstatsd:.*$/use_dogstatsd: ${USE_DOGSTATSD}/" /opt/datadog-agent/agent/datadog.conf
+fi
+
 
 ##### Proxy config #####
 
@@ -97,6 +101,9 @@ if [[ $SD_CONSUL_TOKEN ]]; then
     sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $SD_JMX_ENABLE ]]; then
+    sed -i -e "s/^.*sd_jmx_enable:.*$/sd_jmx_enable: ${SD_JMX_ENABLE}/" /opt/datadog-agent/agent/datadog.conf
+fi
 
 ##### Integrations config #####
 

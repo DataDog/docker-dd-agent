@@ -71,6 +71,7 @@ Some configuration parameters can be changed with environment variables:
    - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
    - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
+   - `SD_JMX_ENABLE` can be set to `yes` to enble JMX service discovery
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
@@ -137,6 +138,9 @@ DogStatsD can be available on port 8125 from anywhere by adding the option `-p 8
 
 To make it available from your host only, use `-p 127.0.0.1:8125:8125/udp` instead.
 
+### Disable dogstatsd
+
+DogStatsd can be disabled by setting `USE_DOGSTATSD` to `no`
 
 ### DogStatsD from other containers
 
