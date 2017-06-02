@@ -51,6 +51,10 @@ if [[ $STATSD_METRIC_NAMESPACE ]]; then
     sed -i -e "s/^# statsd_metric_namespace:.*$/statsd_metric_namespace: ${STATSD_METRIC_NAMESPACE}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $USE_DOGSTATSD ]]; then
+    sed -i -e "s/^.*use_dogstatsd:.*$/use_dogstatsd: ${USE_DOGSTATSD}/" /etc/dd-agent/datadog.conf
+fi
+
 
 ##### Proxy config #####
 
