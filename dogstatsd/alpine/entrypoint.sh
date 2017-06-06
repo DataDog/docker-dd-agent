@@ -5,6 +5,10 @@ if [[ $DD_API_KEY ]]; then
   export API_KEY=${DD_API_KEY}
 fi
 
+if [[ $DD_API_KEY_FILE ]]; then
+  export API_KEY=$(cat $DD_API_KEY_FILE)
+fi
+
 if [[ $API_KEY ]]; then
     sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" $DD_HOME/agent/datadog.conf
 else
