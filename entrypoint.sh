@@ -161,12 +161,22 @@ fi
 if [[ $MESOS_SLAVE ]]; then
     cp /etc/dd-agent/conf.d/mesos_slave.yaml.example /etc/dd-agent/conf.d/mesos_slave.yaml
 
-    sed -i -e "s/localhost/$HOST/" /etc/dd-agent/conf.d/mesos_slave.yaml
+    sed -i -e "s/localhost/${HOST}/" /etc/dd-agent/conf.d/mesos_slave.yaml
 fi
 
 if [[ $MARATHON_URL ]]; then
     cp /etc/dd-agent/conf.d/marathon.yaml.example /etc/dd-agent/conf.d/marathon.yaml
     sed -i -e "s@# - url: \"https://server:port\"@- url: ${MARATHON_URL}@" /etc/dd-agent/conf.d/marathon.yaml
+fi
+
+if [[ $KONG ]]; then
+    cp /etc/dd-agent/conf.d/kong.yaml.example /etc/dd-agent/conf.d/kong.yaml
+    sed -i -e "s/localhost/${HOST}/g" /etc/dd-agent/conf.d/kong.yaml
+fi
+
+if [[ $USE_MOUNT ]]; then
+    cp /etc/dd-agent/conf.d/kong.yaml.example /etc/dd-agent/conf.d/kong.yaml
+    sed -i -e "s/use_mount: no/use_mount: yes/" /etc/dd-agent/conf.d/kong.yaml
 fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
