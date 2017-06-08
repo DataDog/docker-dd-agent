@@ -330,7 +330,7 @@ Exec a shell on the container and tail logs (collector.log, forwarder.log and jm
 alpine:
 
 ```
-$ docker exec -it dd-agent ash
+$ docker exec -it dd-agent bash
 /opt/datadog-agent # tail -f /opt/datadog-agent/logs/dogstatsd.log
 2016-07-22 23:09:09 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:210) | Flush #8: flushed 1 metric, 0 events, and 0 service check runs
 ```
