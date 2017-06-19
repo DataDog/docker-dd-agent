@@ -28,10 +28,12 @@ if [[ $DD_TAGS ]]; then
 fi
 
 if [[ $EC2_TAGS ]]; then
+	export EC2_TAGS=${EC2_TAGS//\//\\/}  # escape forward slashes from tags before invoking sed
 	sed -i -e "s/^# collect_ec2_tags.*$/collect_ec2_tags: ${EC2_TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
 if [[ $TAGS ]]; then
+	export TAGS=${TAGS//\//\\/}  # escape forward slashes from tags before invoking sed
 	sed -i -r -e "s/^# ?tags:.*$/tags: ${TAGS}/" /etc/dd-agent/datadog.conf
 fi
 
