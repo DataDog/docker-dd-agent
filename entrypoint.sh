@@ -187,6 +187,8 @@ if [[ -z $DD_HOSTNAME && $DD_APM_ENABLED ]]; then
         export DD_HOSTNAME=`PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python -c "from utils.hostname import get_hostname; print get_hostname()"`
 fi
 
+echo "[WARNING] This image tag is deprecated and will be removed with agent 5.16. Please use datadog/docker-dd-agent:latest instead"
+
 if [[ $DOGSTATSD_ONLY ]]; then
         echo "[WARNING] This option is deprecated as of agent 5.8.0, it will be removed in the next few versions. Please use the dogstatsd image instead."
 		PYTHONPATH=/opt/datadog-agent/agent /opt/datadog-agent/embedded/bin/python /opt/datadog-agent/agent/dogstatsd.py
