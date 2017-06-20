@@ -171,6 +171,7 @@ fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /etc/dd-agent \;
 
+mkdir -p /etc/dd-agent/checks.d
 find /checks.d -name '*.py' -exec cp {} /etc/dd-agent/checks.d \;
 
 
