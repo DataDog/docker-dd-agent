@@ -139,6 +139,11 @@ if [[ $KUBERNETES ]]; then
     # enable kubernetes check
     cp /etc/dd-agent/conf.d/kubernetes.yaml.example /etc/dd-agent/conf.d/kubernetes.yaml
 
+    # allows to disable kube_service tagging if needed (big clusters)
+    if [[ $KUBERNETES_COLLECT_SERVICE_TAGS ]]; then
+        sed -i -e 's@# collect_service_tags:.*$@ collect_service_tags: '${KUBERNETES_COLLECT_SERVICE_TAGS}'@' /etc/dd-agent/conf.d/kubernetes.yaml
+    fi
+
     # enable event collector
     # WARNING: to avoid duplicates, only one agent at a time across the entire cluster should have this feature enabled.
     if [[ $KUBERNETES_COLLECT_EVENTS ]]; then
