@@ -67,11 +67,12 @@ Some configuration parameters can be changed with environment variables:
 * ~~`DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.~~ **[deprecated]: please use [the dogstatsd-only image](#standalone-dogstatsd)**
 * `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR` and `SD_CONSUL_TOKEN` configure Autodiscovery (previously known as Service Discovery):
 
-   - `SD_BACKEND` can only be set to `docker` for now, since Autodiscovery works only with docker containers.
-   - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
-   - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
-   - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
-   - `SD_JMX_ENABLE` can be set to `yes` to enble JMX Autodiscovery
+   - `SD_BACKEND`: set to `docker` (the only supported container engine) to enable Autodiscovery.
+   - `SD_CONFIG_BACKEND`: set to `etcd`, `consul`, or `zookeeper` to use one of these key-value stores as a template source.
+   - `SD_BACKEND_HOST` and `SD_BACKEND_PORT`: configure the connection to the key-value template source.
+   - `SD_TEMPLATE_DIR`: set to specify the path where the check configuration templates are stored (default is `datadog/check_configs`)
+   - `SD_CONSUL_TOKEN`: when using Consul as a template source and the Consul cluster requires authentication, set a token so the Datadog Agent can connect.
+   - `SD_JMX_ENABLE`: set to `yes` to enable Autodiscovery for JMX-based checks. **Use with `docker-dd-agent:latest-jmx`; this image includes a JVM, which is needed to run jmxfetch.**
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
