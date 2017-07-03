@@ -92,7 +92,7 @@ It is possible to enable some checks through the environment:
 
 #### Autodiscovery
 
-Another way to enable checks is through Autodiscovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS or Docker Swarm. More details about this feature can be found [in the doc](https://docs.datadoghq.com/guides/autodiscovery/).
+Another way to enable checks is through Autodiscovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS, or Docker Swarm. Read more about Autodiscovery on the [Datadog Docs site](https://docs.datadoghq.com/guides/autodiscovery/).
 
 #### Configuration files
 
@@ -126,13 +126,13 @@ Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml
 
 ### Standalone DogStatsD
 
-The default images run a dogstatsd server as well as the agent. If you want to run DogStatsD only, we provide [standalone images](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd) for it. They are identified by the `dogstatsd` keyword in their docker tag (eg: `11.3.585-dogstatsd`, `11.3.585-dogstatsd-alpine`).
+The default images run a dogstatsd server as well as the main Agent (i.e. the collector). If you want to run DogStatsD only, we provide [standalone images](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd) that don't run the collector. These images contain `dogstatsd` in their docker tag (e.g. `11.3.585-dogstatsd`, `11.3.585-dogstatsd-alpine`).
 
-These separate images have the advantage of running DogStatsD server as a non-root user which is useful for platforms like OpenShift. They also don't need shared volumes from the host (`/proc`, `/sys/fs` and the Docker socket) like the complete agent image.
+These separate images have the advantage of running DogStatsD server as a non-root user which is useful for platforms like OpenShift. They also don't need shared volumes from the host (`/proc`, `/sys/fs` and the Docker socket) like the complete Agent image.
 
-**Note**: These images run DogStatsD only. In the agent, tags are collected from the configuration file and from labels by the collector which is not running here. Thus those tags will not be associated with any metrics and events processed by this container.
+**Note**: Metrics submitted by this container will NOT get tagged with any global `tags` specified in `datadog.conf`. These tags are only read by the Agent's collector process, which these DogStatsD-only images do not run.
 
-**Note**: Optionally, the standalone DogStatsD image can also run the the trace-agent process. Pass `-e DD_APM_ENABLED=true` to your `docker run` command to activate the trace-agent and allow your container to receive traces from Datadog's APM integrations.
+**Note**: Optionally, these images can run the the trace-agent process. Pass `-e DD_APM_ENABLED=true` to your `docker run` command to activate the trace-agent and allow your container to receive traces from Datadog's [APM client libraries](http://docs.datadoghq.com/libraries/#tracing-apm-client-libraries).
 
 ### DogStatsD from the host
 
