@@ -44,13 +44,13 @@ For the Docker check to succeed, memory management by cgroup must be enabled on 
 On Debian Jessie or later for example you will need to add `cgroup_enable=memory swapaccount=1` to your boot options, otherwise the agent won't be able to recognize your system. See [this thread](https://askubuntu.com/questions/19486/how-do-i-add-a-kernel-boot-parameter/19487#19487) for details.
 
 
-### Service discovery
+### Autodiscovery
 
-The commands we suggest in _Quick Start_ start service discovery in auto config mode. It means the agent will try and detect containers running [some images](https://github.com/DataDog/dd-agent/tree/5.11.2/conf.d/auto_conf) for which we provide a default check that works most of the time.
+The commands we suggest in _Quick Start_ start Autodiscovery in auto config mode. It means the agent will try and detect containers running [some images](https://github.com/DataDog/dd-agent/tree/5.11.2/conf.d/auto_conf) for which we provide a default check that works most of the time.
 
 If you want to disable it, simply remove the `SD_BACKEND` environment variable.
 
-If you want to learn more about it and how to configure it, head to the [service discovery guide](https://docs.datadoghq.com/guides/servicediscovery/).
+If you want to learn more about it and how to configure it, head to the [Autodiscovery guide](https://docs.datadoghq.com/guides/autodiscovery/).
 
 
 ### Environment variables
@@ -65,13 +65,13 @@ Some configuration parameters can be changed with environment variables:
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
 * `NON_LOCAL_TRAFFIC` tells the image to set the `non_local_traffic: true` option, which enables statsd reporting from any external ip. You may find this useful to report metrics from your other containers. See [network configuration](https://github.com/DataDog/dd-agent/wiki/Network-Traffic-and-Proxy-Configuration) for more details.
 * ~~`DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.~~ **[deprecated]: please use [the dogstatsd-only image](#standalone-dogstatsd)**
-* `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR` and `SD_CONSUL_TOKEN` configure service discovery:
+* `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR` and `SD_CONSUL_TOKEN` configure Autodiscovery (previously known as Service Discovery):
 
-   - `SD_BACKEND` can only be set to `docker` for now, since service discovery works only with docker containers.
+   - `SD_BACKEND` can only be set to `docker` for now, since Autodiscovery works only with docker containers.
    - `SD_CONFIG_BACKEND` can be set to `etcd` or `consul` which are the two configuration stores we support at the moment.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT` are used to configure the connection to the configuration store, and `SD_TEMPLATE_DIR` to specify the path where the check configuration templates are stored.
    - `SD_CONSUL_TOKEN` is used to provide an authentication token for the agent to connect to Consul if required.
-   - `SD_JMX_ENABLE` can be set to `yes` to enble JMX service discovery
+   - `SD_JMX_ENABLE` can be set to `yes` to enble JMX Autodiscovery
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
@@ -89,9 +89,9 @@ It is possible to enable some checks through the environment:
 * `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).
 * `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.
 
-#### Service discovery
+#### Autodiscovery
 
-Another way to enable checks is through service discovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS or Docker Swarm. More details about this feature can be found [in the doc](https://docs.datadoghq.com/guides/servicediscovery/).
+Another way to enable checks is through Autodiscovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS or Docker Swarm. More details about this feature can be found [in the doc](https://docs.datadoghq.com/guides/autodiscovery/).
 
 #### Configuration files
 
@@ -261,7 +261,7 @@ You can find [some examples](https://github.com/DataDog/docker-dd-agent/tree/mas
 ## Alpine-based image
 
 Starting from Agent 5.7 we also provide an image based on [Alpine Linux](https://alpinelinux.org/). This image is smaller (about 60% the size of the Debian based one), and benefits from Alpine's security-oriented design.
-It is compatible with all options described in this file (service discovery, enabling specific integrations, etc.) with the exception of Tracing and APM (the trace-agent does not ship with the Alpine images).
+It is compatible with all options described in this file (Autodiscovery, enabling specific integrations, etc.) with the exception of Tracing and APM (the trace-agent does not ship with the Alpine images).
 
 This image is available under tags with the following naming convention `usual_tag_name-alpine`. So for example to use the latest tag: `datadog/docker-dd-agent:latest-alpine` must be pulled. To use a specific version number, specify `11.2.583-alpine`.
 
