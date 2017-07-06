@@ -65,7 +65,7 @@ Some configuration parameters can be changed with environment variables:
 * ~~`DOGSTATSD_ONLY` tell the image to only start a standalone dogstatsd instance.~~ **[deprecated]: please use [the dogstatsd-only image](#standalone-dogstatsd)**
 * `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR` and `SD_CONSUL_TOKEN` configure Autodiscovery (previously known as Service Discovery):
 
-   - `SD_BACKEND`: set to `docker` (the only supported container engine) to enable Autodiscovery.
+   - `SD_BACKEND`: set to `docker` (the only supported backend) to enable Autodiscovery.
    - `SD_CONFIG_BACKEND`: set to `etcd`, `consul`, or `zookeeper` to use one of these key-value stores as a template source.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT`: configure the connection to the key-value template source.
    - `SD_TEMPLATE_DIR`: when using SD_CONFIG_BACKEND, set the path where the check configuration templates are located in the key-value store (default is `datadog/check_configs`)
