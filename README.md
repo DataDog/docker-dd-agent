@@ -68,7 +68,7 @@ Some configuration parameters can be changed with environment variables:
    - `SD_BACKEND`: set to `docker` (the only supported container engine) to enable Autodiscovery.
    - `SD_CONFIG_BACKEND`: set to `etcd`, `consul`, or `zookeeper` to use one of these key-value stores as a template source.
    - `SD_BACKEND_HOST` and `SD_BACKEND_PORT`: configure the connection to the key-value template source.
-   - `SD_TEMPLATE_DIR`: set to specify the path where the check configuration templates are stored (default is `datadog/check_configs`)
+   - `SD_TEMPLATE_DIR`: when using SD_CONFIG_BACKEND, set the path where the check configuration templates are located in the key-value store (default is `datadog/check_configs`)
    - `SD_CONSUL_TOKEN`: when using Consul as a template source and the Consul cluster requires authentication, set a token so the Datadog Agent can connect.
    - `SD_JMX_ENABLE`: set to `yes` to enable Autodiscovery for JMX-based checks. **Use with `docker-dd-agent:latest-jmx`; this image includes a JVM, which is needed to run jmxfetch.**
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
