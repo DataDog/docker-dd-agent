@@ -124,7 +124,7 @@ Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml
 
 ### Standalone DogStatsD
 
-The default images run a dogstatsd server as well as the main Agent (i.e. the collector). If you want to run DogStatsD only, we provide [standalone images](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd) that don't run the collector. These images contain `dogstatsd` in their docker tag (e.g. `11.3.585-dogstatsd`, `11.3.585-dogstatsd-alpine`).
+The default images run a dogstatsd server as well as the main Agent (i.e. the collector). If you want to run DogStatsD only, we provide [standalone images](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd) that don't run the collector. These images contain `dogstatsd` in their docker tag (e.g. `latest-dogstatsd`, `11.0.5141-dogstatsd-alpine`).
 
 These separate images have the advantage of running DogStatsD server as a non-root user which is useful for platforms like OpenShift. They also don't need shared volumes from the host (`/proc`, `/sys/fs` and the Docker socket) like the complete Agent image.
 
