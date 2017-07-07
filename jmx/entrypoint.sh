@@ -112,6 +112,10 @@ if [[ $SD_CONSUL_TOKEN ]]; then
     sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $SD_JMX_ENABLE ]]; then
+    sed -i -e "s/^# sd_jmx_enable:.*$/sd_jmx_enable: ${SD_JMX_ENABLE}/" /etc/dd-agent/datadog.conf
+fi
+
 
 ##### Integrations config #####
 
