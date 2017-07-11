@@ -112,6 +112,13 @@ if [[ $SD_CONSUL_TOKEN ]]; then
     sed -i -e 's@^# consul_token:.*$@consul_token: '${SD_CONSUL_TOKEN}'@' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $SD_BACKEND_USER ]]; then
+    sed -i -e 's@^# sd_backend_username:.*$@sd_backend_username: '${SD_BACKEND_USER}'@' /etc/dd-agent/datadog.conf
+fi
+
+if [[ $SD_BACKEND_PASSWORD ]]; then
+    sed -i -e 's@^# sd_backend_password:.*$@sd_backend_password: '${SD_BACKEND_PASSWORD}'@' /etc/dd-agent/datadog.conf
+fi
 
 ##### Integrations config #####
 
