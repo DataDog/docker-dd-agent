@@ -129,10 +129,6 @@ if [[ $SD_BACKEND_PASSWORD ]]; then
     sed -i -e 's@^# sd_backend_password:.*$@sd_backend_password: '${SD_BACKEND_PASSWORD}'@' /etc/dd-agent/datadog.conf
 fi
 
-if [[ $SD_JMX_ENABLE ]]; then
-    sed -i -e "s/^.*sd_jmx_enable:.*$/sd_jmx_enable: ${SD_JMX_ENABLE}/" /etc/dd-agent/datadog.conf
-fi
-
 ##### Integrations config #####
 
 if [[ $KUBERNETES || $MESOS_MASTER || $MESOS_SLAVE ]]; then
