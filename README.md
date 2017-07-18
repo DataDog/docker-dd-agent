@@ -48,7 +48,7 @@ On Debian Jessie or later for example you will need to add `cgroup_enable=memory
 
 The commands in the **Quick Start** section enable Autodiscovery in auto-conf mode, meaning the Agent will automatically run checks against any containers running images listed in the default check templates.
 
-To learn more about Autodiscovery, read the [Autodiscovery guide](https://docs.datadoghq.com/guides/autodiscovery/) on the Datadog Docs site. To disable it, do not pass the `SD_BACKEND` environment variable when starting docker-dd-agent.
+To learn more about Autodiscovery, read the [Autodiscovery guide](https://docs.datadoghq.com/guides/autodiscovery/) on the Datadog Docs site. To disable it, omit the `SD_BACKEND` environment variable when starting docker-dd-agent.
 
 
 ### Environment variables
@@ -71,7 +71,7 @@ Some configuration parameters can be changed with environment variables:
    - `SD_TEMPLATE_DIR`: when using SD_CONFIG_BACKEND, set the path where the check configuration templates are located in the key-value store (default is `datadog/check_configs`)
    - `SD_CONSUL_TOKEN`: when using Consul as a template source and the Consul cluster requires authentication, set a token so the Datadog Agent can connect.
    - `SD_BACKEND_USER` and `SD_BACKEND_PASSWORD`: when using etcd as a template source and it requires authentication, set a user and password so the Datadog Agent can connect.
-   - `SD_JMX_ENABLE`: set to `yes` to enable Autodiscovery for JMX-based checks. **Use with `docker-dd-agent:latest-jmx`; this image includes a JVM, which is needed to run jmxfetch.**
+   - `SD_JMX_ENABLE`: set to `yes` to enable Autodiscovery for JMX-based checks. JMX images (`latest-jmx`) automatically set this to `yes` in datadog.conf, so you don't need to pass it in when running those images.
 
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
 
@@ -120,15 +120,19 @@ You can also mount YAML configuration files in the `/conf.d` folder, they will a
 
 Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml` extension will be copied to `/etc/dd-agent/conf.d/`. Please note that to add new files you will need to restart the container.
 
+## JMX Images
+
+If you need to run any JMX-based Agent checks, run a [JMX image](https://github.com/DataDog/docker-dd-agent/tree/master/jmx), e.g. `datadog/docker-dd-agent:latest-jmx`, `datadog/docker-dd-agent:11.0.5150-jmx`, etc. These images are based on the default images but add a JVM, which is needed for the Agent to run jmxfetch.
+
+JMX images automatically enable Autodiscovery for JMX (SD_JMX_ENABLE=yes).
 
 ## DogStatsD
 
-
 ### Standalone DogStatsD
 
-The default images run a dogstatsd server as well as the main Agent (i.e. the collector). If you want to run DogStatsD only, we provide [standalone images](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd) that don't run the collector. These images contain `dogstatsd` in their docker tag (e.g. `latest-dogstatsd`, `11.0.5141-dogstatsd-alpine`).
+The default images (e.g. `latest`) run a DogStatsD server as well as the main Agent (i.e. the collector). If you want to run DogStatsD only, run a [DogStatsD-only image](https://github.com/DataDog/docker-dd-agent/tree/master/dogstatsd), e.g. `datadog/docker-dd-agent:latest-dogstatsd`, `datadog/docker-dd-agent:11.0.5141-dogstatsd-alpine`, etc. These images don't run the collector process.
 
-These separate images have the advantage of running DogStatsD server as a non-root user which is useful for platforms like OpenShift. They also don't need shared volumes from the host (`/proc`, `/sys/fs` and the Docker socket) like the complete Agent image.
+They also run the DogStatsD server as a non-root user, which is useful for platforms like OpenShift. They also don't need shared volumes from the host (`/proc`, `/sys/fs` and the Docker socket) like the default Agent image.
 
 **Note**: Metrics submitted by this container will NOT get tagged with any global `tags` specified in `datadog.conf`. These tags are only read by the Agent's collector process, which these DogStatsD-only images do not run.
 
@@ -164,7 +168,6 @@ DogStatsD address and port will be available in `my_container`'s environment var
 #### Using Docker host IP
 
 Since the Agent container port 8125 should be linked to the host directly, you can connect to DogStatsD through the host. Usually the IP address of the host in a Docker container can be determined by looking at the address of the default route of this container with `ip route` for example. You can then configure your DogStatsD client to connect to `172.17.42.1:8125` for example.
-
 
 ## Tracing + APM
 
