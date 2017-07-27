@@ -45,6 +45,18 @@ if [[ $LOG_LEVEL ]]; then
     sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $DD_LOGS_STDOUT ]]; then
+  export LOGS_STDOUT=$DD_LOGS_STDOUT
+fi
+
+if [[ $LOGS_STDOUT == "yes" ]]; then
+  sed -i -e "/^.*_logfile.*$/d" /opt/datadog-agent/agent/supervisor.conf
+  sed -i -e "/^.*\[program:.*\].*$/a stdout_logfile=\/dev\/stdout" /opt/datadog-agent/agent/supervisor.conf
+  sed -i -e "/^.*\[program:.*\].*$/a stdout_logfile_maxbytes=0" /opt/datadog-agent/agent/supervisor.conf
+  sed -i -e "/^.*\[program:.*\].*$/a stderr_logfile=\/dev\/stderr" /opt/datadog-agent/agent/supervisor.conf
+  sed -i -e "/^.*\[program:.*\].*$/a stderr_logfile_maxbytes=0" /opt/datadog-agent/agent/supervisor.conf
+fi
+
 if [[ $DD_URL ]]; then
     sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' /opt/datadog-agent/agent/datadog.conf
 fi
