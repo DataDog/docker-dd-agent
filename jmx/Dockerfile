@@ -12,7 +12,7 @@ RUN apt-get update \
 && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install the Agent
-ADD https://2053-34269086-gh.circle-artifacts.com/0/home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.15.0.git.1.6b73eee-1_amd64.deb /dd.deb
+ADD https://2060-34269086-gh.circle-artifacts.com/0/home/ubuntu/docker-dd-agent-build-deb-x64/pkg/datadog-agent_5.17.0.git.30.6c19ba4-1_amd64.deb /dd.deb
 RUN dpkg -i /dd.deb && rm /dd.deb
 
 # Configure the Agent
