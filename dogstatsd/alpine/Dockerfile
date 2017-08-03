@@ -16,7 +16,7 @@ COPY entrypoint.sh supervisor.conf /
 EXPOSE 9001/tcp 8125/udp
 
 # Install minimal dependencies
-RUN apk add -qU --no-cache curl-dev python-dev tar sysstat
+RUN apk add -qU --no-cache curl-dev python-dev tar sysstat ca-certificates
 
 # Install build dependencies
 RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
