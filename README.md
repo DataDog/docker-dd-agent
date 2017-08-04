@@ -19,7 +19,7 @@ trigger a package build. Please use caution when using this quick method.
 ## Quick Start
 
 - Fork this branch into a `backport_NNNN` branch
-- The build uses `latest` by default, change it in the Dockerfile if needed
+- The build uses `latest-jmx` by default, change it in the Dockerfile if needed
 - List the PRs to backport in the `patches` file (one line per PR)
 - Test localy by running `docker build -t backport .`
 - Commit and push your branch
