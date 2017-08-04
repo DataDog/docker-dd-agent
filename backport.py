@@ -10,12 +10,14 @@ log = logging.getLogger("backport.py")
 GITHUB_PR_URL_RE = re.compile("github\.com\/DataDog\/(\S+)\/pull\/(\d+)")
 GITHUB_PATH_URL = "https://patch-diff.githubusercontent.com/raw/DataDog/%s/pull/%s.diff"
 
+
 def _pre(pattern):
     """
     Precompiles a diff header regexp after adding it the common
     prefix that matches "--- a/" and "+++ b/"
     """
     return re.compile("(?:\-{3}|\+{3}) \w\/" + pattern)
+
 
 """
 Conversion mapping for each repository.
@@ -41,8 +43,9 @@ IGNORES = {
     "dd-agent": {
         _pre("tests/"),
     },
-    "integrations-core": { }
+    "integrations-core": {}
 }
+
 
 def convert_header(line, repo, silent=False):
     """
@@ -104,6 +107,7 @@ def convert_diff(url):
 
     return conv_diffs
 
+
 def main(patch_urls):
     conv_urls = 0
     conv_diffs = 0
@@ -117,15 +121,14 @@ def main(patch_urls):
     if conv_diffs:
         log.info("Converted %s diffs from %s PRs" % (conv_diffs, conv_urls))
     else:
-        log.error("Converted %s diffs from %s PRs" % (conv_diffs, conv_urls))    
-        exit(1)    
-
+        log.error("Converted %s diffs from %s PRs" % (conv_diffs, conv_urls))
+        exit(1)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Convert github PRs to a diff ready to '
-                                                 'be piped into patch -u -p0. This allows to '
-                                                 'hotpatch an agent to backport fixes.')
+    parser = argparse.ArgumentParser(
+        description='Convert github PRs to a diff ready to be piped into '
+        'patch -u -p0. This allows to hotpatch an agent to backport fixes.')
     parser.add_argument('patches', type=str, help='file to read PR urls from')
 
     try:

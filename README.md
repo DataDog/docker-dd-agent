@@ -45,3 +45,10 @@ the `IGNORES` mapping.
 
 To acount for files being moved to other folders or renames, we use the `CONVERTS` mapping.
 Keys are match regexps, value are string expansion templates, fed to `re.expand`.
+
+## TODO
+
+- support single commit urls
+- add the patch list to the flare
+- support entrypoint changes from docker-dd-agent
+- more sanity checks
