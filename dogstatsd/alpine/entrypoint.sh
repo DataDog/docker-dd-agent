@@ -20,6 +20,10 @@ if [[ $DD_URL ]]; then
     sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' $DD_HOME/agent/datadog.conf
 fi
 
+if [[ $DD_HOSTNAME ]]; then
+    sed -i -r -e "s/^# ?hostname.*$/hostname: ${DD_HOSTNAME}/" $DD_HOME/agent/datadog.conf
+fi
+
 export PATH="$DD_HOME/venv/bin:$DD_HOME/bin:$PATH"
 
 exec "$@"

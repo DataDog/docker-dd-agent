@@ -20,6 +20,10 @@ if [[ $DD_URL ]]; then
     sed -i -e 's@^.*dd_url:.*$@dd_url: '${DD_URL}'@' /etc/dd-agent/datadog.conf
 fi
 
+if [[ $DD_HOSTNAME ]]; then
+    sed -i -r -e "s/^# ?hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
+fi
+
 # ensure that the trace-agent doesn't run unless instructed to
 if [[ $DD_APM_ENABLED ]]; then
     export DD_APM_ENABLED=${DD_APM_ENABLED}
