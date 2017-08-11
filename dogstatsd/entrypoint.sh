@@ -24,6 +24,27 @@ if [[ $DD_HOSTNAME ]]; then
     sed -i -r -e "s/^# ?hostname.*$/hostname: ${DD_HOSTNAME}/" /etc/dd-agent/datadog.conf
 fi
 
+if [[ $DD_STATSD_TARGET ]]; then
+    sed -i -e 's@^.*dogstatsd_target:.*$@dogstatsd_target: '${DD_STATSD_TARGET}'@' /etc/dd-agent/datadog.conf
+fi
+
+if [[ $DD_LOG_LEVEL ]]; then
+  export LOG_LEVEL=$DD_LOG_LEVEL
+fi
+
+if [[ $LOG_LEVEL ]]; then
+    sed -i -e"s/^.*log_level:.*$/log_level: ${LOG_LEVEL}/" /etc/dd-agent/datadog.conf
+fi
+
+if [[ $DD_LOGS_STDOUT ]]; then
+  export LOGS_STDOUT=$DD_LOGS_STDOUT
+fi
+
+if [[ $LOGS_STDOUT == "yes" ]]; then
+  sed -i -e "/^.*_logfile.*$/d" /etc/dd-agent/supervisor.conf
+  sed -i -e "/^.*\[program:.*\].*$/a stdout_logfile=\/dev\/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=\/dev\/stderr\nstderr_logfile_maxbytes=0" /etc/dd-agent/supervisor.conf
+fi
+
 # ensure that the trace-agent doesn't run unless instructed to
 if [[ $DD_APM_ENABLED ]]; then
     export DD_APM_ENABLED=${DD_APM_ENABLED}
