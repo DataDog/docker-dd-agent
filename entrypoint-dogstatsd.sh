@@ -11,13 +11,8 @@ fi
 ##### Core config #####
 python /config_builder.py
 
-# ensure that the trace-agent doesn't run unless instructed to                                           
-if [ $DD_APM_ENABLED ]; then                      
-  export DD_APM_ENABLED=${DD_APM_ENABLED}         
-else                                               
-  # disable the agent when the env var is absent  
-  export DD_APM_ENABLED=false                     
-fi
+# ensure that the trace-agent doesn't run unless instructed to
+export DD_APM_ENABLED=${DD_APM_ENABLED:-false}
 
 ##### Starting up #####
 

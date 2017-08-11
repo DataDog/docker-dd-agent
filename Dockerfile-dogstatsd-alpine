@@ -9,7 +9,6 @@ ENV DD_HOME=/opt/datadog-agent \
     AGENT_VERSION=5.16.0 \
     DD_ETC_ROOT="/opt/datadog-agent/agent" \        
     PATH="/opt/datadog-agent/venv/bin:/opt/datadog-agent/agent/bin:$PATH" \
-    PATH="${DD_HOME}/venv/bin:${DD_HOME}/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes
