@@ -178,6 +178,7 @@ fi
 
 find /conf.d -name '*.yaml' -exec cp --parents {} /opt/datadog-agent/agent \;
 
+mkdir -p /opt/datadog-agent/agent/checks.d
 find /checks.d -name '*.py' -exec cp {} /opt/datadog-agent/agent/checks.d \;
 
 
