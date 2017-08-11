@@ -4,6 +4,7 @@ MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
     AGENT_VERSION=1:5.16.0-1 \
+    DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
@@ -22,13 +23,13 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
 # Configure the Agent
 # 1. Remove dd-agent user from init.d configuration
 # 2. Fix permission on /etc/init.d/datadog-agent
-RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
+RUN mv ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
- && rm -f /etc/dd-agent/conf.d/network.yaml.default \
+ && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
  && chmod +x /etc/init.d/datadog-agent
 
 # Add Docker check
-COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
+COPY conf.d/docker_daemon.yaml ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml
 # Add install and config files
 COPY entrypoint.sh /entrypoint.sh
 COPY config_builder.py /config_builder.py
