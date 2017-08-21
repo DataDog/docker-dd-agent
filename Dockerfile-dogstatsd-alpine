@@ -1,0 +1,46 @@
+FROM alpine:3.4
+
+MAINTAINER Datadog <package@datadoghq.com>
+
+ENV DD_HOME=/opt/datadog-agent \
+    DOCKER_DD_AGENT=yes \
+    # prevent the agent from being started after install
+    DD_START_AGENT=0 \
+    AGENT_VERSION=5.16.0 \
+    DD_ETC_ROOT="/opt/datadog-agent/agent" \        
+    PATH="/opt/datadog-agent/venv/bin:/opt/datadog-agent/agent/bin:$PATH" \
+    PYTHONPATH=/opt/datadog-agent/agent \
+    DD_CONF_LOG_TO_SYSLOG=no \
+    NON_LOCAL_TRAFFIC=yes
+
+# Install minimal dependencies
+RUN apk add -qU --no-cache curl-dev python-dev tar sysstat ca-certificates
+
+# Install build dependencies
+ADD https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
+RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
+    # Install the agent
+    && sh /tmp/setup_agent.sh \
+    # Clean build dependencies
+    && apk del -q .build-deps \
+    # Clean up the install script
+    && rm /tmp/setup_agent.sh
+
+# Add install and config files                      
+COPY entrypoint-dogstatsd.sh /entrypoint.sh                   
+COPY dogstatsd/supervisor-alpine.conf $DD_HOME/agent/supervisor.conf
+COPY config_builder.py /config_builder.py 
+
+# Set proper permissions to allow running as a non-root user
+RUN  mv $DD_HOME/agent/datadog.conf.example $DD_HOME/agent/datadog.conf \
+  && chmod -R g+wx $DD_HOME \
+  && chmod g+x /entrypoint.sh
+
+# Expose supervisor and DogStatsD port
+EXPOSE 9001/tcp 8125/udp
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+USER 1001
+
+CMD supervisord -n -c $DD_HOME/agent/supervisor.conf
