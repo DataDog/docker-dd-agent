@@ -84,7 +84,8 @@ Some configuration parameters can be changed with environment variables:
 
 It is possible to enable some checks through the environment:
 
-* `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works). `KUBERNETES_COLLECT_EVENTS` enables event collection from the kubernetes API, given that `KUBERNETES` is also set. **Note:** only one agent should have `KUBERNETES_COLLECT_EVENTS` set per cluster.
+* `KUBERNETES` enables the kubernetes check if set (`KUBERNETES=yes` works)
+* to collect the kubernetes events, you can set `KUBERNETES_COLLECT_EVENTS` to `true` on **one agent per cluster**. Alternatively, you can enable the leader election mechanism by setting `KUBERNETES_LEADER_CANDIDATE` to `true` on candidate agents, and adjust the lease time (in seconds) with the `KUBERNETES_LEADER_LEASE_DURATION` variable.
 * to collect the `kube_service` tags, the agent needs to query the apiserver's events and services endpoints. If you need to disable that, you can pass `KUBERNETES_COLLECT_SERVICE_TAGS=false`.
 * the kubelet API endpoint is assumed to be the default route of the container, you can override the kubelet API endpoint by specifying `KUBERNETES_KUBELET_HOST` (eg. when using CNI networking, the kubelet API may not listen on the default route address)
 * `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).

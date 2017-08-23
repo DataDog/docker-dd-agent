@@ -43,6 +43,16 @@ if [ $KUBERNETES ]; then
     sed -i -e 's@# collect_service_tags:.*$@ collect_service_tags: '${KUBERNETES_COLLECT_SERVICE_TAGS}'@' ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
   fi
 
+  # enable leader election mechanism for event collection
+  if [ $KUBERNETES_LEADER_CANDIDATE ]; then
+    sed -i -e 's@# leader_candidate:.*$@ leader_candidate: '${KUBERNETES_LEADER_CANDIDATE}'@' ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
+
+    # set the lease time for leader election
+    if [ $KUBERNETES_LEADER_LEASE_DURATION ]; then
+      sed -i -e "s@# leader_lease_duration:.*@ leader_lease_duration: ${KUBERNETES_LEADER_LEASE_DURATION}@" ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
+    fi
+  fi
+
   # enable event collector
   # WARNING: to avoid duplicates, only one agent at a time across the entire cluster should have this feature enabled.
   if [ $KUBERNETES_COLLECT_EVENTS ]; then
