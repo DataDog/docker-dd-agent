@@ -125,10 +125,13 @@ class ConfBuilder(object):
         Used for building datadog.conf
         Sets sd_config_backend and sd_backend_host depending on the environment
         '''
-        _config_backend = getenv('SD_CONFIG_BACKEND', 'sd_config_backend')
+        _config_backend = getenv('SD_CONFIG_BACKEND')
         if _config_backend is not None:
-            _backend_host = getenv('SD_BACKEND_HOST', 'sd_backend_host')
-            if _backend_host is None:
+            self.set_property('sd_config_backend', _config_backend)
+            _backend_host = getenv('SD_BACKEND_HOST')
+            if _backend_host is not None:
+                self.set_property('sd_backend_host', _backend_host)
+            else:
                 _timeout = getdefaulttimeout()
                 try:
                     setdefaulttimeout(1)
