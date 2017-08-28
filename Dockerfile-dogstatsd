@@ -22,6 +22,8 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
 COPY entrypoint-dogstatsd.sh /entrypoint.sh
 COPY dogstatsd/supervisor.conf /etc/dd-agent/supervisor.conf
 COPY config_builder.py /config_builder.py
+# Add debug_mode script
+COPY debug_mode.sh /usr/local/bin/debug_mode.sh
 
 RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  # Set proper permissions to allow running as a non-root user

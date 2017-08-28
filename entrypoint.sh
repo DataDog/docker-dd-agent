@@ -89,6 +89,11 @@ find /conf.d -name '*.yaml' -exec cp --parents {} ${DD_ETC_ROOT} \;
 
 find /checks.d -name '*.py' -exec cp --parents {} ${DD_ETC_ROOT} \;
 
+##### Optionnal debug mode #####
+
+if [ $DD_DEBUG_MODE ]; then
+  sh /usr/local/bin/debug_mode.sh
+fi
 
 ##### Starting up #####
 
