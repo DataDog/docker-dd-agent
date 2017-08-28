@@ -33,6 +33,8 @@ COPY conf.d/docker_daemon.yaml ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml
 # Add install and config files
 COPY entrypoint.sh /entrypoint.sh
 COPY config_builder.py /config_builder.py
+# Add debug_mode script
+COPY debug_mode.sh /usr/local/bin/debug_mode.sh
 
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]

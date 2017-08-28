@@ -30,6 +30,8 @@ RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-
 COPY entrypoint-dogstatsd.sh /entrypoint.sh                   
 COPY dogstatsd/supervisor-alpine.conf $DD_HOME/agent/supervisor.conf
 COPY config_builder.py /config_builder.py 
+# Add debug_mode script
+COPY debug_mode.sh /usr/local/bin/debug_mode.sh
 
 # Set proper permissions to allow running as a non-root user
 RUN  mv $DD_HOME/agent/datadog.conf.example $DD_HOME/agent/datadog.conf \

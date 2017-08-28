@@ -14,6 +14,12 @@ python /config_builder.py
 # ensure that the trace-agent doesn't run unless instructed to
 export DD_APM_ENABLED=${DD_APM_ENABLED:-false}
 
+##### Optionnal debug mode #####
+
+if [ $DD_DEBUG_MODE ]; then
+  sh /usr/local/bin/debug_mode.sh
+fi
+
 ##### Starting up #####
 
 if [ -z $DD_HOSTNAME ] && [ $DD_APM_ENABLED ]; then
