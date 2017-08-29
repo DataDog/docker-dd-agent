@@ -21,7 +21,10 @@ fi
 
 if [ "$LOGS_STDOUT" = "yes" ]; then
   sed -i -e "/^.*_logfile.*$/d" ${DD_ETC_ROOT}/supervisor.conf
-  sed -i -e "/^.*\[program:.*\].*$/a stdout_logfile=\/dev\/stdout\nstdout_logfile_maxbytes=0\nstderr_logfile=\/dev\/stderr\nstderr_logfile_maxbytes=0" ${DD_ETC_ROOT}/supervisor.conf
+  sed -i -e '/^.*\[program:.*\].*$/a stdout_logfile=\/dev\/stdout\
+stdout_logfile_maxbytes=0\
+stderr_logfile=\/dev\/stderr\
+stderr_logfile_maxbytes=0' ${DD_ETC_ROOT}/supervisor.conf
 fi
 
 ##### Integrations config #####
