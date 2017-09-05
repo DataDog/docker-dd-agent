@@ -11,6 +11,18 @@ fi
 ##### Core config #####
 python /config_builder.py
 
+if [ $DD_LOGS_STDOUT ]; then
+  export LOGS_STDOUT=$DD_LOGS_STDOUT
+fi
+
+if [ "$LOGS_STDOUT" = "yes" ]; then
+  sed -i -e "/^.*_logfile.*$/d" ${DD_ETC_ROOT}/supervisor.conf
+  sed -i -e '/^.*\[program:.*\].*$/a stdout_logfile=\/dev\/stdout\
+stdout_logfile_maxbytes=0\
+stderr_logfile=\/dev\/stderr\
+stderr_logfile_maxbytes=0' ${DD_ETC_ROOT}/supervisor.conf
+fi
+
 # ensure that the trace-agent doesn't run unless instructed to
 export DD_APM_ENABLED=${DD_APM_ENABLED:-false}
 
