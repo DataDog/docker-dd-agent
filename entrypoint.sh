@@ -29,14 +29,6 @@ fi
 
 ##### Integrations config #####
 
-if [ $KUBERNETES ] || [ $MESOS_MASTER ] || [ $MESOS_SLAVE ]; then
-  # expose supervisord as a health check
-  echo "
-[inet_http_server]
-port = 0.0.0.0:9001
-" >> ${DD_ETC_ROOT}/supervisor.conf
-fi
-
 if [ $KUBERNETES ]; then
   # enable kubernetes check
   cp ${DD_ETC_ROOT}/conf.d/kubernetes.yaml.example ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
