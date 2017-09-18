@@ -34,8 +34,8 @@ RUN mv /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
  && chmod g+w /opt/datadog-agent/run/ \
  && chmod g+x /probe.sh
 
-# Expose supervisor, DogStatsD and trace-agent port
-EXPOSE 9001/tcp 8125/udp 8126/tcp
+# Expose DogStatsD and trace-agent port
+EXPOSE 8125/udp 8126/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \

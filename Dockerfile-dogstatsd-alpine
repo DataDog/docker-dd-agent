@@ -7,7 +7,7 @@ ENV DD_HOME=/opt/datadog-agent \
     # prevent the agent from being started after install
     DD_START_AGENT=0 \
     AGENT_VERSION=5.17.2 \
-    DD_ETC_ROOT="/opt/datadog-agent/agent" \        
+    DD_ETC_ROOT="/opt/datadog-agent/agent" \
     PATH="/opt/datadog-agent/venv/bin:/opt/datadog-agent/agent/bin:$PATH" \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
@@ -26,18 +26,18 @@ RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-
     # Clean up the install script
     && rm /tmp/setup_agent.sh
 
-# Add install and config files                      
-COPY entrypoint-dogstatsd.sh /entrypoint.sh                   
+# Add install and config files
+COPY entrypoint-dogstatsd.sh /entrypoint.sh
 COPY dogstatsd/supervisor-alpine.conf $DD_HOME/agent/supervisor.conf
-COPY config_builder.py /config_builder.py 
+COPY config_builder.py /config_builder.py
 
 # Set proper permissions to allow running as a non-root user
 RUN  mv $DD_HOME/agent/datadog.conf.example $DD_HOME/agent/datadog.conf \
   && chmod -R g+wx $DD_HOME \
   && chmod g+x /entrypoint.sh
 
-# Expose supervisor and DogStatsD port
-EXPOSE 9001/tcp 8125/udp
+# Expose DogStatsD port
+EXPOSE 8125/udp
 
 ENTRYPOINT ["/entrypoint.sh"]
 

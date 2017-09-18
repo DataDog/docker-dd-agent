@@ -42,8 +42,8 @@ COPY config_builder.py /config_builder.py
 # Extra conf.d and checks.d
 VOLUME ["/conf.d", "/checks.d"]
 
-# Expose DogStatsD, supervisord and trace-agent ports
-EXPOSE 8125/udp 9001/tcp 8126/tcp
+# Expose DogStatsD and trace-agent ports
+EXPOSE 8125/udp 8126/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
