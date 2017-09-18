@@ -6,7 +6,7 @@ ENV DD_HOME=/opt/datadog-agent \
     DOCKER_DD_AGENT=yes \
     # prevent the agent from being started after install
     DD_START_AGENT=0 \
-    AGENT_VERSION=5.17.1 \
+    AGENT_VERSION=5.17.2 \
     DD_ETC_ROOT="/opt/datadog-agent/agent" \        
     PATH="/opt/datadog-agent/venv/bin:/opt/datadog-agent/agent/bin:$PATH" \
     PYTHONPATH=/opt/datadog-agent/agent \
