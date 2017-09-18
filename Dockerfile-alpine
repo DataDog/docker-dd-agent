@@ -27,9 +27,15 @@ RUN apk add -qU --no-cache -t .build-deps gcc musl-dev pgcluster-dev linux-heade
     && apk del -q .build-deps \
     && rm /tmp/setup_agent.sh
 
+
+# Add healthcheck script
+COPY probe-alpine.sh $DD_HOME/probe.sh
+
 # Configure the Agent
+# and make healthcheck script executable
 RUN cp ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
-  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default
+  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
+  && chmod +x $DD_HOME/probe.sh
 
 # Add Docker check
 COPY conf.d/docker_daemon.yaml "${DD_ETC_ROOT}/conf.d/docker_daemon.yaml"
@@ -45,9 +51,7 @@ EXPOSE 9001/tcp 8125/udp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
-  CMD test $($DD_HOME/venv/bin/python $DD_HOME/venv/bin/supervisorctl \
-      -c ${DD_ETC_ROOT}/supervisor.conf status | awk '{print $2}' | egrep -v 'RUNNING|EXITED' | wc -l) \
-      -eq 0 || exit 1
+  CMD ./probe.sh
 
 ENTRYPOINT ["/sbin/tini", "-g", "--", "/entrypoint.sh"]
 
