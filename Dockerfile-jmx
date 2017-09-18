@@ -21,16 +21,20 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Add healthcheck script
+COPY probe.sh /probe.sh
+
 # Configure the Agent
 RUN mv ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
- && chmod +x /etc/init.d/datadog-agent
+ && chmod +x /etc/init.d/datadog-agent \
+ && chmod +x /probe.sh
 
-# Add Docker check                                  
-COPY conf.d/docker_daemon.yaml ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml                                  
-# Add install and config files                      
-COPY entrypoint.sh /entrypoint.sh                   
+# Add Docker check
+COPY conf.d/docker_daemon.yaml ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml
+# Add install and config files
+COPY entrypoint.sh /entrypoint.sh
 COPY config_builder.py /config_builder.py
 
 # Extra conf.d and checks.d
@@ -41,9 +45,7 @@ EXPOSE 8125/udp 9001/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
-  CMD test $(/opt/datadog-agent/embedded/bin/python /opt/datadog-agent/bin/supervisorctl \
-      -c ${DD_ETC_ROOT}/supervisor.conf status | awk '{print $2}' | egrep -v 'RUNNING|EXITED' | wc -l) \
-      -eq 0 || exit 1
+  CMD ./probe.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
