@@ -9,6 +9,7 @@ from urllib2 import urlopen, URLError, HTTPError
 from socket import getdefaulttimeout, setdefaulttimeout
 from ConfigParser import ConfigParser
 
+
 class ConfBuilder(object):
     '''
     This class manages the configuration files
@@ -27,7 +28,6 @@ class ConfBuilder(object):
         self.datadog_conf_file = '{}/datadog.conf'.format(dd_agent_root)
         # This will store the config parser object that is used in the different functions
         self.config = None
-
 
     def load_config(self, config_file):
         '''
@@ -64,7 +64,7 @@ class ConfBuilder(object):
         # The LOG_LEVEL env variable superseeds DD_LOG_LEVEL
         self.set_from_env_mapping('DD_LOG_LEVEL', 'log_level')
         self.set_from_env_mapping('LOG_LEVEL', 'log_level')
-        self.set_from_env_mapping('NON_LOCAL_TRAFFIC', 'non_local_traffic', action='store_true')
+        self.set_from_env_mapping('NON_LOCAL_TRAFFIC', 'non_local_traffic')
         self.set_from_env_mapping('DD_URL', 'dd_url')
         self.set_from_env_mapping('STATSD_METRIC_NAMESPACE', 'statsd_metric_namespace')
         self.set_from_env_mapping('USE_DOGSTATSD', 'use_dogstatsd')
@@ -138,7 +138,7 @@ class ConfBuilder(object):
                     _ec2_ip = urlopen('http://169.254.169.254/latest/meta-data/local-ipv4')
                     self.set_property('sd_backend_host', _ec2_ip.read())
                 except (URLError, HTTPError):
-                    pass # silent fail on purpose
+                    pass  # silent fail on purpose
                 setdefaulttimeout(_timeout)
 
     def set_generics(self, prefix='DD_CONF_'):
