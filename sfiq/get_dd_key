@@ -1,0 +1,6 @@
+#!/bin/bash
+
+curl -ksL https://s3-us-west-2.amazonaws.com/infra-distributions/crypter/stable/linux/amd64/crypter -o crypter
+#curl -ksL https://s3-us-west-2.amazonaws.com/infra-distributions/crypter/stable/darwin/amd64/crypter-client-go -o crypter
+chmod +x ./crypter
+echo -n $(./crypter get -e ops -r dcos -k CHEF_DD_API_KEY)
