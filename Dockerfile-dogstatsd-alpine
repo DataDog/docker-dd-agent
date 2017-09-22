@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.6
 
 MAINTAINER Datadog <package@datadoghq.com>
 
@@ -18,7 +18,7 @@ RUN apk add -qU --no-cache curl-dev python-dev tar sysstat ca-certificates
 
 # Install build dependencies
 ADD https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
-RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev pgcluster-dev linux-headers \
+RUN apk add -qU --no-cache -t .build-deps curl gcc musl-dev linux-headers \
     # Install the agent
     && sh /tmp/setup_agent.sh \
     # Clean build dependencies
