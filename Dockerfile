@@ -1,4 +1,4 @@
-FROM datadog/docker-dd-agent:latest-jmx
+FROM datadog/docker-dd-agent:latest
 MAINTAINER Datadog <package@datadoghq.com>
 
 # Install patch package (silent)
