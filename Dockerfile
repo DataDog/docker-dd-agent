@@ -1,4 +1,4 @@
-FROM datadog/docker-dd-agent:latest
+FROM datadog/docker-dd-agent:latest-alpine
 MAINTAINER Datadog <package@datadoghq.com>
 
 # Install patch package (silent)
