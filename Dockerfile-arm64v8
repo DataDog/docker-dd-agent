@@ -1,0 +1,57 @@
+FROM arm64v8/debian:jessie
+
+MAINTAINER Datadog <package@datadoghq.com>
+
+ENV DD_HOME=/opt/datadog-agent \
+    # prevent the agent from being started after install
+    DD_START_AGENT=0 \
+    DOCKER_DD_AGENT=yes \
+    AGENT_VERSION=5.17.2 \
+    DD_ETC_ROOT="/opt/datadog-agent/agent" \
+    PATH="/opt/datadog-agent/venv/bin:/opt/datadog-agent/agent/bin:$PATH" \
+    PYTHONPATH="/opt/datadog-agent/agent" \
+    DD_CONF_LOG_TO_SYSLOG=no \
+    NON_LOCAL_TRAFFIC=yes \
+    DD_SUPERVISOR_DELETE_USER=yes
+
+# Install dependencies
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y ca-certificates curl sysstat python \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Install build dependencies
+ADD https://raw.githubusercontent.com/DataDog/dd-agent/master/packaging/datadog-agent/source/setup_agent.sh /tmp/setup_agent.sh
+RUN sh /tmp/setup_agent.sh \
+    # Install the agent
+    && rm /tmp/setup_agent.sh
+
+
+# Add healthcheck script
+COPY probe-alpine.sh $DD_HOME/probe.sh
+
+# Configure the Agent
+# and make healthcheck script executable
+RUN cp ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
+  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
+  && chmod +x $DD_HOME/probe.sh
+
+# Add Docker check
+COPY conf.d/docker_daemon.yaml "${DD_ETC_ROOT}/conf.d/docker_daemon.yaml"
+# Add install and config files
+COPY entrypoint.sh /entrypoint.sh
+COPY config_builder.py /config_builder.py
+
+# Extra conf.d and checks.d
+VOLUME ["/conf.d", "/checks.d"]
+
+# Expose DogStatsD and trace-agent ports
+EXPOSE 8125/udp 8126/tcp
+
+# Healthcheck
+HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+  CMD ./probe.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+WORKDIR $DD_HOME
+CMD ["supervisord", "-c", "agent/supervisor.conf"]
