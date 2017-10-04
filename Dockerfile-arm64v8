@@ -33,7 +33,6 @@ COPY probe-alpine.sh $DD_HOME/probe.sh
 # Configure the Agent
 # and make healthcheck script executable
 RUN cp ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
-  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
   && chmod +x $DD_HOME/probe.sh
 
 # Add Docker check
