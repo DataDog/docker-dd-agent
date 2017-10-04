@@ -16,7 +16,7 @@ ENV DD_HOME=/opt/datadog-agent \
 
 # Install dependencies
 RUN apt-get update \
- && apt-get install --no-install-recommends -y ca-certificates curl sysstat python \
+ && apt-get install --no-install-recommends -y ca-certificates curl sysstat python gcc python-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
