@@ -1,0 +1,11 @@
+init_config:
+
+instances:
+    [{}]
+
+logs:
+  - type: udp
+    port: 10518
+    service: container
+    source: container
+    # sourcecategory: test
