@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.18.0-1 \
+    AGENT_VERSION=1:5.17.3~logsbeta.2-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
@@ -12,13 +12,12 @@ ENV DOCKER_DD_AGENT=yes \
     DD_SUPERVISOR_DELETE_USER=yes
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
- && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get install --no-install-recommends -y ca-certificates \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN sh -c "echo 'deb http://apt.datad0g.com/ beta main' > /etc/apt/sources.list.d/datadog.list"
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52
+RUN apt-get update
+RUN apt-cache policy datadog-agent | grep logs
+RUN apt-get install datadog-agent=1:5.17.3~logsbeta.2-1 -y
+RUN apt-get install -y ca-certificates
 
 # Add healthcheck script
 COPY probe.sh /probe.sh
@@ -33,8 +32,8 @@ RUN mv ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
  && chmod +x /etc/init.d/datadog-agent \
  && chmod +x /probe.sh
 
-# Add Docker check
-COPY conf.d/docker_daemon.yaml ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml
+# Add Logs-Agent Configs and Docker check configs
+ADD conf.d/* ${DD_ETC_ROOT}/conf.d/
 # Add install and config files
 COPY entrypoint.sh /entrypoint.sh
 COPY config_builder.py /config_builder.py
@@ -43,7 +42,7 @@ COPY config_builder.py /config_builder.py
 VOLUME ["/conf.d", "/checks.d"]
 
 # Expose DogStatsD and trace-agent ports
-EXPOSE 8125/udp 8126/tcp
+EXPOSE 8125/udp 8126/tcp 10518/udp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \

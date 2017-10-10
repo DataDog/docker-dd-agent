@@ -11,6 +11,21 @@ fi
 ##### Core config #####
 python /config_builder.py
 
+##### Logs Agent config #####
+echo "
+init_config:
+
+instances:
+    [{}]
+
+api_key: ${API_KEY}
+" > ${DD_ETC_ROOT}/conf.d/logs-agent.yaml
+if [ -z ${DD_HOSTNAME+x} ]; then
+  echo "hostname is unset";
+else
+  echo "hostname: ${DD_HOSTNAME}\n" >> ${DD_ETC_ROOT}/conf.d/logs-agent.yaml;
+fi
+
 if [ "${DD_SUPERVISOR_DELETE_USER}" = "yes" ]; then
   sed -i "/user=dd-agent/d" ${DD_ETC_ROOT}/supervisor.conf
 fi

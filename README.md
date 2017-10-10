@@ -3,6 +3,31 @@
 This repository is meant to build the base image for a Datadog Agent container. You will have to use the resulting image to configure and run the Agent.
 
 
+## Logs-Agent Beta
+
+This branch of the docker-dd-agent will install the 5.17.3 version of the dd-agent that includes the Logs-Agent. In order to use it, take the following steps:
+
+1. Download this repo/branch
+2. Configure your `conf.d/custom_logs.yaml` (docs [here](https://docs.datadoghq.com/logs/)) to include the log configurations you want (if you update the `port` value you must also overwrite 10518 with the new value in the run command below)
+3. `docker build .`
+4. Use this docker run command:
+
+```
+docker run -d --name dd-agent \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /proc/:/host/proc/:ro \
+  -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+  -e API_KEY={your_api_key_here} \
+  -e DD_HOSTNAME={OPTIONAL_your_hostname_here_} \
+  -e SD_BACKEND=docker \
+  -p 8125:8125/udp \
+  -p 10516:10516/tcp \
+  -p 10518:10518/udp \
+  {image_from_build_output}
+
+```
+
+
 ## Quick Start
 
 The default image is ready-to-go. You just need to set your API_KEY in the environment.
