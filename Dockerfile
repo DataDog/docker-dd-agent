@@ -46,7 +46,7 @@ VOLUME ["/conf.d", "/checks.d"]
 EXPOSE 8125/udp 8126/tcp
 
 # Healthcheck
-HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+HEALTHCHECK --interval=5m --timeout=20s --retries=1 \
   CMD ./probe.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
