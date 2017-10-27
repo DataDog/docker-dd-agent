@@ -10,7 +10,8 @@ ENV DOCKER_DD_AGENT=yes \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes \
     DD_SUPERVISOR_DELETE_USER=yes
-
+ARG DOGSTATSD_PORT_UDP=8215
+ARG DOGSTATSD_PORT_TCP=8216
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
@@ -43,7 +44,7 @@ COPY config_builder.py /config_builder.py
 VOLUME ["/conf.d", "/checks.d"]
 
 # Expose DogStatsD and trace-agent ports
-EXPOSE 8125/udp 8126/tcp
+EXPOSE $DOGSTATSD_PORT_UDP/udp $DOGSTATSD_PORT_TCP/tcp
 
 # Healthcheck
 HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
