@@ -12,11 +12,12 @@ ENV DOCKER_DD_AGENT=yes \
     DD_SUPERVISOR_DELETE_USER=yes
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 \
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y apt-transport-https ca-certificates \
+ && echo "deb https://apt.datad0g.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 24BEB436F432F6E0 \
  && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get install --no-install-recommends -y ca-certificates \
+ && apt-get install --no-install-recommends -y datadog-agent \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
