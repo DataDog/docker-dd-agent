@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.18.1-1 \
+    AGENT_VERSION=1:5.20.0~rc1-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
@@ -14,10 +14,10 @@ ENV DOCKER_DD_AGENT=yes \
 # Install the Agent
 RUN apt-get update \
  && apt-get install --no-install-recommends -y apt-transport-https ca-certificates \
- && echo "deb https://apt.datad0g.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+ && echo "deb https://apt.datad0g.com/ beta main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C7A7DA52 24BEB436F432F6E0 \
  && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent \
+ && apt-get install --no-install-recommends -y datadog-agent=1:5.20.0~rc.1-1 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
