@@ -15,7 +15,7 @@ LABEL name="datadog/docker-dd-agent:latest-rhel" \
       vendor="Datadog" \
       version="${AGENT_VERSION}" \
       release="" \
-      summary="A containerized ersion ofthe Datadog Agent." \
+      summary="A containerized version of the Datadog Agent." \
       description="The Datadog Agent provides real-time performance tracking and visualization of your operating system and application metrics." \
       url="https://www.datadoghq.com" \
       run='docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro \
@@ -31,7 +31,7 @@ LABEL name="datadog/docker-dd-agent:latest-rhel" \
 COPY rhel/help.1 /help.1
 
 # add license
-COPY LICENSE /licenses
+COPY rhel/licenses /licenses
 
 #Adding Datadog repo
 COPY rhel/datadog.repo /etc/yum.repos.d/datadog.repo
