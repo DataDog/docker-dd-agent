@@ -12,7 +12,7 @@ operating system and application metrics.
 Datadog's support team is available to assist you with any Datadog Agent related issues.
 Support can be reached via [ticket](http://docs.datadoghq.com/help/), chat or other channels.
 
-Please remember to [send your logs](https://github.com/DataDog/dd-agent/wiki/Send-logs-to-support)
+Please remember to [send your logs](https://help.datadoghq.com/hc/en-us/articles/204991415-Send-logs-and-configs-to-Datadog-via-flare-command)
 as part of your case.
 
 # USAGE
