@@ -1,0 +1,163 @@
+.PP
+% 
+.BR IMAGE_NAME (1)
+
+% MAINTAINER
+% DATE
+.TH DESCRIPTION
+.PP
+The Datadog Agent provides real\-time performance tracking and visualization of your containers, orchestrators,
+operating system and application metrics.
+.SH SUPPORT
+.PP
+Datadog's support team is available to assist you with any Datadog Agent related issues.
+Support can be reached via ticket \[la]http://docs.datadoghq.com/help/\[ra], chat or other channels.
+.PP
+Please remember to send your logs \[la]https://github.com/DataDog/dd-agent/wiki/Send-logs-to-support\[ra]
+as part of your case.
+.SH USAGE
+.SH Quick Start
+.PP
+The default image is ready\-to\-go. You just need to set your API_KEY in the environment.
+.PP
+.RS
+.nf
+docker run \-d \-\-name dd\-agent \\
+  \-v /var/run/docker.sock:/var/run/docker.sock:ro \\
+  \-v /proc/:/host/proc/:ro \\
+  \-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \\
+  \-e API_KEY={your_api_key_here} \\
+  \-e SD_BACKEND=docker \\
+  datadog/docker\-dd\-agent
+.fi
+.RE
+.PP
+If you are running on Amazon Linux, use the following instead:
+.PP
+.RS
+.nf
+docker run \-d \-\-name dd\-agent \\
+  \-v /var/run/docker.sock:/var/run/docker.sock:ro \\
+  \-v /proc/:/host/proc/:ro \\
+  \-v /cgroup/:/host/sys/fs/cgroup:ro \\
+  \-e API_KEY={your_api_key_here} \\
+  \-e SD_BACKEND=docker \\
+  datadog/docker\-dd\-agent
+.fi
+.RE
+.SH Configuration
+.SS Hostname
+.PP
+By default the agent container will use the \fB\fCName\fR field found in the \fB\fCdocker info\fR command from the host as a hostname. To change this behavior you can update the \fB\fChostname\fR field in \fB\fC/etc/dd\-agent/datadog.conf\fR\&. The easiest way for this is to use the \fB\fCDD_HOSTNAME\fR environment variable (see below).
+.SS CGroups
+.PP
+For the Docker check to succeed, memory management by cgroup must be enabled on the host as explained in the debian wiki \[la]https://wiki.debian.org/LXC#Preparing_the_host_system_for_running_LXC\[ra]\&.
+On Debian Jessie or later for example you will need to add \fB\fCcgroup_enable=memory swapaccount=1\fR to your boot options, otherwise the agent won't be able to recognize your system. See this thread \[la]https://askubuntu.com/questions/19486/how-do-i-add-a-kernel-boot-parameter/19487#19487\[ra] for details.
+.SS Autodiscovery
+.PP
+The commands in the \fBQuick Start\fP section enable Autodiscovery in auto\-conf mode, meaning the Agent will automatically run checks against any containers running images listed in the default check templates.
+.PP
+To learn more about Autodiscovery, read the Autodiscovery guide \[la]https://docs.datadoghq.com/guides/autodiscovery/\[ra] on the Datadog Docs site. To disable it, omit the \fB\fCSD_BACKEND\fR environment variable when starting docker\-dd\-agent.
+.SS Environment variables
+.PP
+Some configuration parameters can be changed with environment variables:
+.RS
+.IP \(bu 2
+\fB\fCDD_HOSTNAME\fR set the hostname (write it in \fB\fCdatadog.conf\fR)
+.IP \(bu 2
+\fB\fCTAGS\fR set host tags. Add \fB\fC\-e TAGS=simple\-tag\-0,tag\-key\-1:tag\-value\-1\fR to use [simple\-tag\-0, tag\-key\-1:tag\-value\-1] as host tags.
+.IP \(bu 2
+\fB\fCEC2_TAGS\fR set EC2 host tags. Add \fB\fC\-e EC2_TAGS=yes\fR to use EC2 custom host tags. Requires an IAM role \[la]https://github.com/DataDog/dd-agent/wiki/Capturing-EC2-tags-at-startup\[ra] associated with the instance.
+.IP \(bu 2
+\fB\fCLOG_LEVEL\fR set logging verbosity (CRITICAL, ERROR, WARNING, INFO, DEBUG). Add \fB\fC\-e LOG_LEVEL=DEBUG\fR to turn logs to debug mode.
+.IP \(bu 2
+\fB\fCDD_LOGS_STDOUT\fR sends all logs to stdout and stderr, for them to be processed by Docker.
+.IP \(bu 2
+\fB\fCPROXY_HOST\fR, \fB\fCPROXY_PORT\fR, \fB\fCPROXY_USER\fR and \fB\fCPROXY_PASSWORD\fR set the proxy configuration.
+.IP \(bu 2
+\fB\fCDD_URL\fR set the Datadog intake server to send Agent data to (used when using an agent as a proxy \[la]https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy\[ra] )
+.IP \(bu 2
+\fB\fCNON_LOCAL_TRAFFIC\fR tells the image to set the \fB\fCnon_local_traffic: true\fR option, which enables statsd reporting from any external ip. You may find this useful to report metrics from your other containers. See network configuration \[la]https://github.com/DataDog/dd-agent/wiki/Network-Traffic-and-Proxy-Configuration\[ra] for more details.
+.IP \(bu 2
+~~\fB\fCDOGSTATSD_ONLY\fR tell the image to only start a standalone dogstatsd instance.~~ \fB[deprecated]: please use the dogstatsd\-only image \[la]#standalone-dogstatsd\[ra]\fP
+.IP \(bu 2
+\fB\fCSD_BACKEND\fR, \fB\fCSD_CONFIG_BACKEND\fR, \fB\fCSD_BACKEND_HOST\fR, \fB\fCSD_BACKEND_PORT\fR, \fB\fCSD_TEMPLATE_DIR\fR, \fB\fCSD_CONSUL_TOKEN\fR, \fB\fCSD_BACKEND_USER\fR and \fB\fCSD_BACKEND_PASSWORD\fR configure Autodiscovery (previously known as Service Discovery):
+.RS
+.IP \(bu 2
+\fB\fCSD_BACKEND\fR: set to \fB\fCdocker\fR (the only supported backend) to enable Autodiscovery.
+.IP \(bu 2
+\fB\fCSD_CONFIG_BACKEND\fR: set to \fB\fCetcd\fR, \fB\fCconsul\fR, or \fB\fCzookeeper\fR to use one of these key\-value stores as a template source.
+.IP \(bu 2
+\fB\fCSD_BACKEND_HOST\fR and \fB\fCSD_BACKEND_PORT\fR: configure the connection to the key\-value template source.
+.IP \(bu 2
+\fB\fCSD_TEMPLATE_DIR\fR: when using SD\fICONFIG\fPBACKEND, set the path where the check configuration templates are located in the key\-value store (default is \fB\fCdatadog/check_configs\fR)
+.IP \(bu 2
+\fB\fCSD_CONSUL_TOKEN\fR: when using Consul as a template source and the Consul cluster requires authentication, set a token so the Datadog Agent can connect.
+.IP \(bu 2
+\fB\fCSD_BACKEND_USER\fR and \fB\fCSD_BACKEND_PASSWORD\fR: when using etcd as a template source and it requires authentication, set a user and password so the Datadog Agent can connect.
+.RE
+.IP \(bu 2
+\fB\fCDD_APM_ENABLED\fR run the trace\-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (\fBThis option is NOT available on Alpine Images\fP)
+.RE
+.PP
+\fBNote:\fP it is possible to use \fB\fCDD_TAGS\fR instead of \fB\fCTAGS\fR, \fB\fCDD_LOG_LEVEL\fR instead of \fB\fCLOG_LEVEL\fR and \fB\fCDD_API_KEY\fR instead of \fB\fCAPI_KEY\fR, these variables have the same impact.
+.SS Enabling integrations
+.SS Environment variables
+.PP
+It is possible to enable some checks through the environment:
+.RS
+.IP \(bu 2
+\fB\fCKUBERNETES\fR enables the kubernetes check if set (\fB\fCKUBERNETES=yes\fR works). \fB\fCKUBERNETES_COLLECT_EVENTS\fR enables event collection from the kubernetes API, given that \fB\fCKUBERNETES\fR is also set. \fBNote:\fP only one agent should have \fB\fCKUBERNETES_COLLECT_EVENTS\fR set per cluster.
+.IP \(bu 2
+to collect the \fB\fCkube_service\fR tags, the agent needs to query the apiserver's events and services endpoints. If you need to disable that, you can pass \fB\fCKUBERNETES_COLLECT_SERVICE_TAGS=false\fR\&.
+.IP \(bu 2
+the kubelet API endpoint is assumed to be the default route of the container, you can override the kubelet API endpoint by specifying \fB\fCKUBERNETES_KUBELET_HOST\fR (eg. when using CNI networking, the kubelet API may not listen on the default route address)
+.IP \(bu 2
+\fB\fCMESOS_MASTER\fR and \fB\fCMESOS_SLAVE\fR respectively enable the mesos master and mesos slave checks if set (\fB\fCMESOS_MASTER=yes\fR works).
+.IP \(bu 2
+\fB\fCMARATHON_URL\fR if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to \fB\fChttp://leader.mesos:8080\fR\&.
+.RE
+.SS Autodiscovery
+.PP
+Another way to enable checks is through Autodiscovery. This is particularly useful in dynamic environments like Kubernetes, Amazon ECS, or Docker Swarm. Read more about Autodiscovery on the Datadog Docs site \[la]https://docs.datadoghq.com/guides/autodiscovery/\[ra]\&.
+.SS Configuration files
+.PP
+You can also mount YAML configuration files in the \fB\fC/conf.d\fR folder, they will automatically be copied to \fB\fC/etc/dd\-agent/conf.d/\fR when the container starts.  The same can be done for the \fB\fC/checks.d\fR folder. Any Python files in the \fB\fC/checks.d\fR folder will automatically be copied to \fB\fC/etc/dd\-agent/checks.d/\fR when the container starts.
+.nr step0 0 1
+.RS
+.IP \n+[step0]
+Create a configuration folder on the host and write your YAML files in it.  The examples below can be used for the \fB\fC/checks.d\fR folder as well.
+.PP
+.RS
+.nf
+mkdir /opt/dd\-agent\-conf.d
+touch /opt/dd\-agent\-conf.d/nginx.yaml
+.fi
+.RE
+.IP \n+[step0]
+When creating the container, mount this new folder to \fB\fC/conf.d\fR\&.
+\fB\fC
+docker run \-d \-\-name dd\-agent \\
+  \-v /var/run/docker.sock:/var/run/docker.sock:ro \\
+  \-v /proc/:/host/proc/:ro \\
+  \-v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \\
+  \-v /opt/dd\-agent\-conf.d:/conf.d:ro \\
+  \-e API_KEY={your_api_key_here} \\
+  datadog/docker\-dd\-agent
+\fR
+.PP
+\fIThe important part here is \fB\fC\-v /opt/dd\-agent\-conf.d:/conf.d:ro\fR\fP
+.RE
+.PP
+Now when the container starts, all files in \fB\fC/opt/dd\-agent\-conf.d\fR with a \fB\fC\&.yaml\fR extension will be copied to \fB\fC/etc/dd\-agent/conf.d/\fR\&. Please note that to add new files you will need to restart the container.
+.SH Source Code
+.PP
+Datadog's agent is open\-source and avaiable on Github in the following respositories:
+.RS
+.IP \(bu 2
+Datadog Agent \[la]https://github.com/DataDog/dd-agent/\[ra]
+.IP \(bu 2
+Docker Container \[la]https://github.com/DataDog/docker-dd-agent/\[ra]
+.IP \(bu 2
+Integrations \[la]https://github.com/DataDog/integrations-core\[ra]
+.RE

@@ -1,0 +1,72 @@
+FROM registry.access.redhat.com/rhel7
+MAINTAINER Datadog <package@datadoghq.com>
+
+ENV DOCKER_DD_AGENT=yes \
+    DD_LOGS_STDOUT=yes \
+    AGENT_VERSION=5.19.0-1 \
+    DD_ETC_ROOT=/etc/dd-agent \
+    PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
+    PYTHONPATH=/opt/datadog-agent/agent \
+    DD_CONF_LOG_TO_SYSLOG=no \
+    NON_LOCAL_TRAFFIC=yes \
+    DD_SUPERVISOR_DELETE_USER=yes
+
+LABEL name="datadog/docker-dd-agent:latest-rhel" \
+      vendor="Datadog" \
+      version="${AGENT_VERSION}" \
+      release="" \
+      summary="A containerized version of the Datadog Agent." \
+      description="The Datadog Agent provides real-time performance tracking and visualization of your operating system and application metrics." \
+      url="https://www.datadoghq.com" \
+      run='docker run -d --name dd-agent -v /var/run/docker.sock:/var/run/docker.sock:ro \
+           -v /proc/:/host/proc/:ro \
+           -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+           -e API_KEY={your_api_key_here} \
+           -e SD_BACKEND=docker \
+           ${IMAGE}' \
+      io.k8s.description="Datadog Agent provides real-time performance tracking and visualization of your Kubernetes clusters, containers, operating system and application metrics." \
+      io.k8s.display-name="Datadog Agent"
+
+# add man page
+COPY rhel/help.1 /help.1
+
+# add license
+COPY rhel/licenses /licenses
+
+#Adding Datadog repo
+COPY rhel/datadog.repo /etc/yum.repos.d/datadog.repo
+
+# Add healthcheck script
+COPY probe.sh /probe.sh
+
+# Install the Agent
+RUN yum -y install datadog-agent-${AGENT_VERSION} \
+ && rpm -e --justdb datadog-agent-${AGENT_VERSION} \
+ && yum clean all && rm -rf /var/cache/yum \
+ && cp /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
+ && sed -i -e"s/^.*non_local_traffic:.*$/non_local_traffic: yes/" /etc/dd-agent/datadog.conf \
+ && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf \
+ && sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf \
+ && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
+ && rm /etc/dd-agent/conf.d/network.yaml.default \
+ && chmod +x /probe.sh
+
+# Add Docker check
+COPY conf.d/docker_daemon.yaml /etc/dd-agent/conf.d/docker_daemon.yaml
+
+# Add install and config files
+COPY entrypoint.sh /entrypoint.sh
+COPY config_builder.py /config_builder.py
+
+# Extra conf.d and checks.d
+VOLUME ["/conf.d", "/checks.d"]
+
+# Expose DogStatsD and trace-agent ports
+EXPOSE 8125/udp 8126/tcp
+
+# Healthcheck
+HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+  CMD ./probe.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["supervisord", "-n", "-c", "/etc/dd-agent/supervisor.conf"]
