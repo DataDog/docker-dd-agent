@@ -61,10 +61,6 @@ if [ $KUBERNETES ]; then
 
 fi
 
-if [ $COLLECT_LABELS_AS_TAGS ]; then
-  sed -i -e "s@# collect_labels_as_tags: com.docker.compose.service, com.docker.compose.project@collect_labels_as_tags: $COLLECT_LABELS_AS_TAGS@" ${DD_ETC_ROOT}/conf.d/docker_daemon.yaml
-fi
-
 if [ $MESOS_MASTER ]; then
   cp ${DD_ETC_ROOT}/conf.d/mesos_master.yaml.example ${DD_ETC_ROOT}/conf.d/mesos_master.yaml
   cp ${DD_ETC_ROOT}/conf.d/zk.yaml.example ${DD_ETC_ROOT}/conf.d/zk.yaml
