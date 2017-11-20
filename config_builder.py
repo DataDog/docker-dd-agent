@@ -61,7 +61,7 @@ class ConfBuilder(object):
         # The TAGS env variable superseeds DD_TAGS
         self.set_from_env_mapping('DD_TAGS', 'tags')
         self.set_from_env_mapping('TAGS', 'tags')
-        self.set_from_env_mapping('COLLECT_LABELS_AS_TAGS', 'docker_labels_as_tags')
+        self.set_from_env_mapping('DD_COLLECT_LABELS_AS_TAGS', 'docker_labels_as_tags')
         # The LOG_LEVEL env variable superseeds DD_LOG_LEVEL
         self.set_from_env_mapping('DD_LOG_LEVEL', 'log_level')
         self.set_from_env_mapping('LOG_LEVEL', 'log_level')
