@@ -31,13 +31,20 @@ COPY entrypoint-dogstatsd.sh /entrypoint.sh
 COPY dogstatsd/supervisor-alpine.conf $DD_HOME/agent/supervisor.conf
 COPY config_builder.py /config_builder.py
 
+# Add healthcheck script
+COPY probe-alpine.sh $DD_HOME/probe.sh
+
 # Set proper permissions to allow running as a non-root user
 RUN  mv $DD_HOME/agent/datadog.conf.example $DD_HOME/agent/datadog.conf \
   && chmod -R g+wx $DD_HOME \
-  && chmod g+x /entrypoint.sh
+  && chmod g+x /entrypoint.sh \
+  && chmod +x $DD_HOME/probe.sh
 
 # Expose DogStatsD port
 EXPOSE 8125/udp
+
+HEALTHCHECK --interval=5m --timeout=3s --retries=1 \
+ CMD ./probe.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
