@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.20.0-1 \
+    AGENT_VERSION=1:5.20.1-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
