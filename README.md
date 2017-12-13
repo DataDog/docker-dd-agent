@@ -90,6 +90,7 @@ It is possible to enable some checks through the environment:
 * to collect the kubernetes events, you can set `KUBERNETES_COLLECT_EVENTS` to `true` on **one agent per cluster**. Alternatively, you can enable the leader election mechanism by setting `KUBERNETES_LEADER_CANDIDATE` to `true` on candidate agents, and adjust the lease time (in seconds) with the `KUBERNETES_LEADER_LEASE_DURATION` variable.
 * by default, only events from the `default` namespace are collected. To change what namespaces are used, set the `KUBERNETES_NAMESPACE_NAME_REGEX` regexp to a valid regexp matching your relevant namespaces.
 * to collect the `kube_service` tags, the agent needs to query the apiserver's events and services endpoints. If you need to disable that, you can pass `KUBERNETES_COLLECT_SERVICE_TAGS=false`.
+* to add custom tags to the kubernetes metrics, you can set `KUBERNETES_TAGS` to a comma delimited list, e.g. `optional_tag1,optional_tag2`.
 * the kubelet API endpoint is assumed to be the default route of the container, you can override the kubelet API endpoint by specifying `KUBERNETES_KUBELET_HOST` (eg. when using CNI networking, the kubelet API may not listen on the default route address)
 * `MESOS_MASTER` and `MESOS_SLAVE` respectively enable the mesos master and mesos slave checks if set (`MESOS_MASTER=yes` works).
 * `MARATHON_URL` if set will be used to enable the Marathon check that will query the URL passed in this variable for metrics. It can usually be set to `http://leader.mesos:8080`.

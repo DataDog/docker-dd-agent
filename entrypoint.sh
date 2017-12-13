@@ -59,6 +59,11 @@ if [ $KUBERNETES ]; then
     sed -i -e "s@# namespace_name_regexp:@ namespace_name_regexp: ${KUBERNETES_NAMESPACE_NAME_REGEX}@" ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
   fi
 
+  # add custom tags to kubernetes metrics
+  if [ $KUBERNETES_TAGS ]; then
+    sed -i -e "s@# tags:@ $(python -c "print 'tags: ' + str(\"$KUBERNETES_TAGS\".split(','))")@" ${DD_ETC_ROOT}/conf.d/kubernetes.yaml
+  fi
+
 fi
 
 if [ $MESOS_MASTER ]; then
