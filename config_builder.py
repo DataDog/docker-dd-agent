@@ -69,6 +69,7 @@ class ConfBuilder(object):
         self.set_from_env_mapping('DD_URL', 'dd_url')
         self.set_from_env_mapping('STATSD_METRIC_NAMESPACE', 'statsd_metric_namespace')
         self.set_from_env_mapping('USE_DOGSTATSD', 'use_dogstatsd')
+        self.set_from_env_mapping('DD_HISTOGRAM_PERCENTILES', 'histogram_percentiles')
         ##### Proxy config #####
         self.set_from_env_mapping('PROXY_HOST', 'proxy_host')
         self.set_from_env_mapping('PROXY_PORT', 'proxy_port')
