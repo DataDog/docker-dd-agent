@@ -128,8 +128,6 @@ Now when the container starts, all files in `/opt/dd-agent-conf.d` with a `.yaml
 
 If you need to run any JMX-based Agent checks, run a [JMX image](https://github.com/DataDog/docker-dd-agent/tree/master/jmx), e.g. `datadog/docker-dd-agent:latest-jmx`, `datadog/docker-dd-agent:11.0.5150-jmx`, etc. These images are based on the default images but add a JVM, which is needed for the Agent to run jmxfetch.
 
-JMX images automatically enable Autodiscovery.
-
 ## DogStatsD
 
 ### Standalone DogStatsD
