@@ -27,6 +27,10 @@ stderr_logfile=\/dev\/stderr\
 stderr_logfile_maxbytes=0' ${DD_ETC_ROOT}/supervisor.conf
 fi
 
+# Move the supervisord socket to /dev/shm to circumvent
+# https://github.com/Supervisor/supervisor/issues/654
+sed -i "s@/opt/datadog-agent/run/datadog-supervisor.sock@/dev/shm/datadog-supervisor.sock@" ${DD_ETC_ROOT}/supervisor.conf
+
 ##### Integrations config #####
 
 if [ $KUBERNETES ]; then
