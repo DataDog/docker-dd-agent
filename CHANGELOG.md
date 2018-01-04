@@ -1,5 +1,12 @@
 # Changes
 
+## 12.5.5202 / 2018-01-04
+
+###
+
+- [ALL IMAGES] move the supervisord socket to `/dev/shm/` to work around a bug in some
+versions of the overlay filesystem (see #269 and #270)
+
 ## 12.3.5172 / 2017-09-19
 
 ### Changes
