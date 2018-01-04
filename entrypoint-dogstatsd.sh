@@ -8,6 +8,11 @@ if [ -n $DD_HOME ]; then
   fi
 fi
 
+# Move the supervisord socket to /dev/shm to circumvent
+# https://github.com/Supervisor/supervisor/issues/654
+sed -i "s@/opt/datadog-agent/run/datadog-supervisor.sock@/dev/shm/datadog-supervisor.sock@" ${DD_ETC_ROOT}/supervisor.conf
+export DD_CONF_SUPERVISOR_SOCKET="/dev/shm/datadog-supervisor.sock"
+
 ##### Core config #####
 python /config_builder.py
 
@@ -22,10 +27,6 @@ stdout_logfile_maxbytes=0\
 stderr_logfile=\/dev\/stderr\
 stderr_logfile_maxbytes=0' ${DD_ETC_ROOT}/supervisor.conf
 fi
-
-# Move the supervisord socket to /dev/shm to circumvent
-# https://github.com/Supervisor/supervisor/issues/654
-sed -i "s@/opt/datadog-agent/run/datadog-supervisor.sock@/dev/shm/datadog-supervisor.sock@" ${DD_ETC_ROOT}/supervisor.conf
 
 # ensure that the trace-agent doesn't run unless instructed to
 export DD_APM_ENABLED=${DD_APM_ENABLED:-false}
