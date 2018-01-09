@@ -9,7 +9,8 @@ ENV DOCKER_DD_AGENT=yes \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes \
-    DD_SUPERVISOR_DELETE_USER=yes
+    DD_SUPERVISOR_DELETE_USER=yes \
+    DD_CONF_PROCFS_PATH="/host/proc"
 
 LABEL name="datadog/docker-dd-agent:latest-rhel" \
       vendor="Datadog" \
@@ -48,7 +49,6 @@ RUN yum -y install datadog-agent-${AGENT_VERSION} \
  && sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" /etc/dd-agent/datadog.conf \
  && sed -i "/user=dd-agent/d" /etc/dd-agent/supervisor.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
- && rm /etc/dd-agent/conf.d/network.yaml.default \
  && chmod +x /probe.sh
 
 # Add Docker check
