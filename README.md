@@ -75,6 +75,8 @@ Some configuration parameters can be changed with environment variables:
    - `SD_BACKEND_USER` and `SD_BACKEND_PASSWORD`: when using etcd as a template source and it requires authentication, set a user and password so the Datadog Agent can connect.
 
 * `DD_APM_ENABLED` run the trace-agent along with the infrastructure agent, allowing the container to accept traces on 8126/tcp (**This option is NOT available on Alpine Images**)
+* `DD_PROCESS_AGENT_ENABLED` run the [process-agent](https://docs.datadoghq.com/graphing/infrastructure/process/) along with the infrastructure agent, feeding data to the Live Process View and Live Containers View (**This option is NOT available on Alpine Images**)
+
 * `DD_COLLECT_LABELS_AS_TAGS` Enables the collection of the listed labels as tags. Comma separated string, without spaces unless in quotes. Exemple: `-e DD_COLLECT_LABELS_AS_TAGS='com.docker.label.foo, com.docker.label.bar'` or `-e DD_COLLECT_LABELS_AS_TAGS=com.docker.label.foo,com.docker.label.bar`.
 
 **Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
