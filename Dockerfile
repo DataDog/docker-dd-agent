@@ -9,7 +9,8 @@ ENV DOCKER_DD_AGENT=yes \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes \
-    DD_SUPERVISOR_DELETE_USER=yes
+    DD_SUPERVISOR_DELETE_USER=yes \
+    DD_CONF_PROCFS_PATH="/host/proc"
 
 # Install the Agent
 RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
@@ -29,7 +30,6 @@ COPY probe.sh /probe.sh
 # 3. Make healthcheck script executable
 RUN mv ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
- && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
  && chmod +x /etc/init.d/datadog-agent \
  && chmod +x /probe.sh
 

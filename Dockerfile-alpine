@@ -13,7 +13,8 @@ ENV DD_HOME=/opt/datadog-agent \
     PYTHONPATH="/opt/datadog-agent/agent" \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes \
-    DD_SUPERVISOR_DELETE_USER=yes
+    DD_SUPERVISOR_DELETE_USER=yes \
+    DD_CONF_PROCFS_PATH="/host/proc"
 
 # Install minimal dependencies
 RUN apk add -qU --no-cache coreutils curl curl-dev python-dev tar sysstat tini
@@ -34,7 +35,6 @@ COPY probe-alpine.sh $DD_HOME/probe.sh
 # Configure the Agent
 # and make healthcheck script executable
 RUN cp ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
-  && rm -f ${DD_ETC_ROOT}/conf.d/network.yaml.default \
   && chmod +x $DD_HOME/probe.sh
 
 # Add Docker check
