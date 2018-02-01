@@ -79,7 +79,7 @@ Some configuration parameters can be changed with environment variables:
 
 * `DD_COLLECT_LABELS_AS_TAGS` Enables the collection of the listed labels as tags. Comma separated string, without spaces unless in quotes. Exemple: `-e DD_COLLECT_LABELS_AS_TAGS='com.docker.label.foo, com.docker.label.bar'` or `-e DD_COLLECT_LABELS_AS_TAGS=com.docker.label.foo,com.docker.label.bar`.
 
-**Note:** it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`, these variables have the same impact.
+**Note:** Some of those have alternative names, but with the same impact: it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`.
 
 
 ### Enabling integrations
