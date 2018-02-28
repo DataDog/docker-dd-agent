@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 
 MAINTAINER Datadog <package@datadoghq.com>
 
@@ -11,10 +11,13 @@ ENV DOCKER_DD_AGENT=yes \
     NON_LOCAL_TRAFFIC=yes
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y gnupg dirmngr \
+ && echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2923DFF56EDA6E76E55E492D3A80E30382E94DE \
  && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" ca-certificates \
+ && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
+ && apt-get install --no-install-recommends -y ca-certificates \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && sed -i "s@/opt/datadog-agent/run/datadog-supervisor.sock@/dev/shm/datadog-supervisor.sock@" /etc/init.d/datadog-agent
