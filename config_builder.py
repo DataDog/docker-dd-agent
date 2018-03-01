@@ -85,6 +85,8 @@ class ConfBuilder(object):
         self.set_from_env_mapping('SD_BACKEND_PASSWORD', 'sd_backend_password')
         # Magic trick to automatically add properties not yet define in the doc
         self.set_generics('DD_CONF_')
+        ##### Trace Config #####
+        self.set_from_env_mapping('MAX_TRACES_PER_SECOND', 'max_traces_per_second', 'trace.sampler')
 
         self.save_config(self.datadog_conf_file)
 
