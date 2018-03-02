@@ -1,5 +1,11 @@
 # Changes
 
+## 12.6.5221 / unreleased
+
+###
+
+- [DEBIAN] use the new GPG signing key for the apt.datadoghq.com repository
+
 ## 12.5.5202 / 2018-01-04
 
 ###
