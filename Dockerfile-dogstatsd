@@ -16,7 +16,8 @@ RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/d
  && apt-get update \
  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" ca-certificates \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+ && sed -i "s@/opt/datadog-agent/run/datadog-supervisor.sock@/dev/shm/datadog-supervisor.sock@" /etc/init.d/datadog-agent
 
 # Add install and config files
 COPY entrypoint-dogstatsd.sh /entrypoint.sh
