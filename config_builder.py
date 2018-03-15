@@ -85,6 +85,8 @@ class ConfBuilder(object):
         self.set_from_env_mapping('SD_BACKEND_PASSWORD', 'sd_backend_password')
         # Magic trick to automatically add properties not yet define in the doc
         self.set_generics('DD_CONF_')
+        ##### Trace Config #####
+        self.set_from_env_mapping('MAX_TRACES_PER_SECOND', 'max_traces_per_second', 'trace.sampler')
 
         self.save_config(self.datadog_conf_file)
 
@@ -157,6 +159,8 @@ class ConfBuilder(object):
         '''
         Sets the given property to the given value in the configuration
         '''
+        if not self.config.has_selection(section):
+            self.config.add_section(section)
         if self.config is None:
             logging.error('config object needs to be created before setting properties')
             exit(1)
