@@ -159,6 +159,8 @@ class ConfBuilder(object):
         '''
         Sets the given property to the given value in the configuration
         '''
+        if not self.config.has_selection(section):
+            self.config.add_section(section)
         if self.config is None:
             logging.error('config object needs to be created before setting properties')
             exit(1)

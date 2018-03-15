@@ -15,7 +15,6 @@ export DD_CONF_SUPERVISOR_SOCKET="/dev/shm/datadog-supervisor.sock"
 
 
 ##### Core config #####
-sed -i '/^#.* \[trace.sampler\]/s/^# //' ${DD_ETC_ROOT}/datadog.conf
 python /config_builder.py
 
 if [ "${DD_SUPERVISOR_DELETE_USER}" = "yes" ]; then
