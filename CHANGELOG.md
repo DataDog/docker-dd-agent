@@ -2,11 +2,11 @@
 
 ## 12.6.5223 / unreleased
 
-###
-
 - [DEBIAN] use the new GPG signing key for the apt.datadoghq.com repository
 - [DEBIAN] fix the status command
 - [ALL IMAGES] add support for max_traces_per_second option to datadog.conf [#291](https://github.com/DataDog/docker-dd-agent/pull/291)
+- [DEBIAN] update the Debian base image to stretch
+- [JMX] ship openjdk 8u151
 
 ## 12.5.5202 / 2018-01-04
 

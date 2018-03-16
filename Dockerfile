@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:stretch
 
 MAINTAINER Datadog <package@datadoghq.com>
 
@@ -13,7 +13,9 @@ ENV DOCKER_DD_AGENT=yes \
     DD_CONF_PROCFS_PATH="/host/proc"
 
 # Install the Agent
-RUN echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y gnupg dirmngr \
+ && echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2923DFF56EDA6E76E55E492D3A80E30382E94DE \
  && apt-get update \
  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
