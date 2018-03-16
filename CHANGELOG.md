@@ -1,6 +1,8 @@
 # Changes
 
-## 12.6.5223 / unreleased
+## 12.7.5223 / unreleased
+
+## 12.6.5223 / 2018-03-16
 
 - [DEBIAN] use the new GPG signing key for the apt.datadoghq.com repository
 - [DEBIAN] fix the status command
