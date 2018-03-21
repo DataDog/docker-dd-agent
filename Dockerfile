@@ -3,7 +3,7 @@ FROM debian:stretch
 MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.22.3-1 \
+    AGENT_VERSION=1:5.23.0~rc.3-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
@@ -12,16 +12,16 @@ ENV DOCKER_DD_AGENT=yes \
     DD_SUPERVISOR_DELETE_USER=yes \
     DD_CONF_PROCFS_PATH="/host/proc"
 
-# Install the Agent
+ # Install the Agent
+
 RUN apt-get update \
- && apt-get install --no-install-recommends -y gnupg dirmngr \
- && echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2923DFF56EDA6E76E55E492D3A80E30382E94DE \
- && apt-get update \
- && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
- && apt-get install --no-install-recommends -y ca-certificates \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  && apt-get install --no-install-recommends -y gnupg dirmngr apt-transport-https ca-certificates \
+  && echo "deb https://apt.datad0g.com/ beta main" > /etc/apt/sources.list.d/datadog.list \
+  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2923DFF56EDA6E76E55E492D3A80E30382E94DE \
+  && apt-get update \
+  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Add healthcheck script
 COPY probe.sh /probe.sh
