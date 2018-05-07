@@ -41,7 +41,8 @@ COPY rhel/datadog.repo /etc/yum.repos.d/datadog.repo
 COPY probe.sh /probe.sh
 
 # Install the Agent
-RUN yum -y install datadog-agent-${AGENT_VERSION} \
+RUN yum-config-manager --disable rhel-7-server-htb-rpms \
+ && yum -y install datadog-agent-${AGENT_VERSION} \
  && rpm -e --justdb datadog-agent-${AGENT_VERSION} \
  && yum clean all && rm -rf /var/cache/yum \
  && cp /etc/dd-agent/datadog.conf.example /etc/dd-agent/datadog.conf \
