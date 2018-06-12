@@ -18,7 +18,7 @@ docker run -d --name dd-agent \
   datadog/docker-dd-agent:latest
 ```
 
-If you are running on Amazon Linux, use the following instead:
+If you are running on Amazon Linux with version < 2, use the following instead:
 
 ```
 docker run -d --name dd-agent \
