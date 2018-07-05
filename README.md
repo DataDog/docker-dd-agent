@@ -50,7 +50,7 @@ On Debian Jessie or later for example you will need to add `cgroup_enable=memory
 
 The commands in the **Quick Start** section enable Autodiscovery in auto-conf mode, meaning the Agent will automatically run checks against any containers running images listed in the default check templates.
 
-To learn more about Autodiscovery, read the [Autodiscovery guide](https://docs.datadoghq.com/guides/autodiscovery/) on the Datadog Docs site. To disable it, omit the `SD_BACKEND` environment variable when starting docker-dd-agent.
+To learn more about Autodiscovery, read the [Autodiscovery guide](https://docs.datadoghq.com/agent/faq/agent-5-autodiscovery/) on the Datadog Docs site. To disable it, omit the `SD_BACKEND` environment variable when starting docker-dd-agent.
 
 
 ### Environment variables
