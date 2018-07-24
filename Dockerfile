@@ -12,7 +12,7 @@ ENV DOCKER_DD_AGENT=yes \
     DD_SUPERVISOR_DELETE_USER=yes \
     DD_CONF_PROCFS_PATH="/host/proc"
 
- # Install the Agent
+# Install the Agent
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y gnupg dirmngr apt-transport-https ca-certificates \
