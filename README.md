@@ -80,6 +80,8 @@ Some configuration parameters can be changed with environment variables:
 * `DD_COLLECT_LABELS_AS_TAGS` Enables the collection of the listed labels as tags. Comma separated string, without spaces unless in quotes. Exemple: `-e DD_COLLECT_LABELS_AS_TAGS='com.docker.label.foo, com.docker.label.bar'` or `-e DD_COLLECT_LABELS_AS_TAGS=com.docker.label.foo,com.docker.label.bar`.
 
 * `MAX_TRACES_PER_SECOND`: Specifies the maximum number of traces per second to sample for APM.  Set to `0` to disable this limit.
+* `DD_HISTOGRAM_PERCENTILES`: histogram percentiles to compute, separated by spaces. The default is "0.95"
+* `DD_HISTOGRAM_AGGREGATES`: histogram aggregates to compute, separated by spaces. The default is "max median avg count"
 
 **Note:** Some of those have alternative names, but with the same impact: it is possible to use `DD_TAGS` instead of `TAGS`, `DD_LOG_LEVEL` instead of `LOG_LEVEL` and `DD_API_KEY` instead of `API_KEY`.
 
