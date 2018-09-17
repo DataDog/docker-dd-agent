@@ -2,8 +2,14 @@ FROM debian:stretch
 
 MAINTAINER Datadog <package@datadoghq.com>
 
+ARG AGENT_VERSION_ARG=1:5.26.0-1
+ARG AGENT_REPO_ARG="http://apt.datadoghq.com/"
+ARG AGENT_REPO_CHANNEL_ARG=stable
+
 ENV DOCKER_DD_AGENT=yes \
-    AGENT_VERSION=1:5.26.0-1 \
+    AGENT_VERSION=$AGENT_VERSION_ARG \
+    AGENT_REPO=$AGENT_REPO_ARG \
+    AGENT_REPO_CHANNEL=$AGENT_REPO_CHANNEL_ARG \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
@@ -15,7 +21,7 @@ ENV DOCKER_DD_AGENT=yes \
 # Install the Agent
 RUN apt-get update \
  && apt-get install --no-install-recommends -y gnupg dirmngr \
- && echo "deb http://apt.datadoghq.com/ stable main" > /etc/apt/sources.list.d/datadog.list \
+ && echo "deb ${AGENT_REPO} ${AGENT_REPO_CHANNEL} main" > /etc/apt/sources.list.d/datadog.list \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2923DFF56EDA6E76E55E492D3A80E30382E94DE \
  && apt-get update \
  && apt-get install --no-install-recommends -y datadog-agent="${AGENT_VERSION}" \
