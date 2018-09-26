@@ -1,6 +1,8 @@
 # Changes
 
-## 12.7.5223 / unreleased
+## 12.7.5271 / 2018-09-26
+
+- expose histogram_aggregates setting as environment variable
 
 ## 12.6.5223 / 2018-03-16
 
