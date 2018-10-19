@@ -1,13 +1,13 @@
 #!/bin/bash
 set -ex
 
-AGENT_VERSION_ARG=1:5.28.99-dockertest.rc.1-1
-AGENT_REPO_ARG=http://apt.datad0g.com///
-AGENT_REPO_CHANNEL_ARG=beta
+AGENT_VERSION=1:5.27.1-1
+AGENT_REPO="https://apt.datadoghq.com/"
+AGENT_REPO_CHANNEL=stable
 
 docker build \
-        --build-arg AGENT_VERSION_ARG=1:5.28.99-dockertest.rc.1-1}" \
-        --build-arg AGENT_REPO_ARG=http://apt.datad0g.com//}" \
-        --build-arg AGENT_REPO_CHANNEL_ARG=beta}" \
+        --build-arg AGENT_VERSION_ARG=${AGENT_VERSION} \
+        --build-arg AGENT_REPO_ARG=${AGENT_REPO} \
+        --build-arg AGENT_REPO_CHANNEL_ARG=${AGENT_REPO_CHANNEL} \
         --tag "${DOCKER_REPO}:${DOCKER_TAG}" \
         .
