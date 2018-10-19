@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ex
 
-export AGENT_VERSION_ARG=1:5.26.0-1
-export AGENT_REPO_ARG="http://apt.datadoghq.com/"
-export AGENT_REPO_CHANNEL_ARG=stable
+export AGENT_VERSION_ARG=1:5.28.99-dockertest.rc.1-1
+export AGENT_REPO_ARG=http://apt.datad0g.com//"
+export AGENT_REPO_CHANNEL_ARG=beta
 
