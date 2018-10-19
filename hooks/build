@@ -2,12 +2,12 @@
 set -ex
 
 AGENT_VERSION_ARG=1:5.28.99-dockertest.rc.1-1
-AGENT_REPO_ARG=http://apt.datad0g.com//
+AGENT_REPO_ARG=http://apt.datad0g.com///
 AGENT_REPO_CHANNEL_ARG=beta
 
 docker build \
         --build-arg AGENT_VERSION_ARG=1:5.28.99-dockertest.rc.1-1}" \
-        --build-arg AGENT_REPO_ARG=http://apt.datad0g.com/}" \
+        --build-arg AGENT_REPO_ARG=http://apt.datad0g.com//}" \
         --build-arg AGENT_REPO_CHANNEL_ARG=beta}" \
         --tag "${DOCKER_REPO}:${DOCKER_TAG}" \
         .
