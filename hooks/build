@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ex
+
+AGENT_VERSION_ARG=1:5.26.0-1
+AGENT_REPO_ARG=https://apt.datadoghq.com/
+AGENT_REPO_CHANNEL_ARG=stable
+
+docker build \
+        --build-arg AGENT_VERSION_ARG="${AGENT_VERSION}" \
+        --build-arg AGENT_REPO_ARG="${AGENT_REPO}" \
+        --build-arg AGENT_REPO_CHANNEL_ARG="${AGENT_REPO_CHANNEL}" \
+        --tag "${DOCKER_REPO}:${DOCKER_TAG}" \
+        .
