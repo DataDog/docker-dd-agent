@@ -1,0 +1,9 @@
+#!/bin/bash
+set -ex
+
+docker build \
+        --build-arg AGENT_VERSION_ARG="${AGENT_VERSION}" \
+        --build-arg AGENT_REPO_ARG="${AGENT_REPO}" \
+        --build-arg AGENT_REPO_CHANNEL_ARG="${AGENT_REPO_CHANNEL}" \
+        --tag "${DOCKER_REPO}:${DOCKER_TAG}" \
+        .
