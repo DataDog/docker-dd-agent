@@ -30,6 +30,7 @@ COPY probe.sh /probe.sh
 # 1. Remove dd-agent user from init.d configuration
 # 2. Fix permission on /etc/init.d/datadog-agent
 # 3. Make healthcheck script executable
+#
 RUN mv ${DD_ETC_ROOT}/datadog.conf.example ${DD_ETC_ROOT}/datadog.conf \
  && sed -i 's/AGENTUSER="dd-agent"/AGENTUSER="root"/g' /etc/init.d/datadog-agent \
  && chmod +x /etc/init.d/datadog-agent \
