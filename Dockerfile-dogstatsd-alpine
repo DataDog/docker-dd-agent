@@ -2,7 +2,7 @@ FROM alpine:3.6
 
 MAINTAINER Datadog <package@datadoghq.com>
 
-ARG AGENT_VERSION_ARG=5.28.0
+ARG AGENT_VERSION_ARG=5.28.1-rc.1
 
 ENV DD_HOME=/opt/datadog-agent \
     DOCKER_DD_AGENT=yes \

@@ -2,9 +2,9 @@ FROM debian:stretch
 
 MAINTAINER Datadog <package@datadoghq.com>
 
-ARG AGENT_VERSION_ARG=1:5.28.0-1
-ARG AGENT_REPO_ARG="http://apt.datadoghq.com/"
-ARG AGENT_REPO_CHANNEL_ARG=stable
+ARG AGENT_VERSION_ARG=1:5.28.1~rc.1-1
+ARG AGENT_REPO_ARG=http://apt.datad0g.com/
+ARG AGENT_REPO_CHANNEL_ARG=beta
 
 ENV DOCKER_DD_AGENT=yes \
     AGENT_VERSION=$AGENT_VERSION_ARG \
