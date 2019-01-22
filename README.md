@@ -64,6 +64,7 @@ Some configuration parameters can be changed with environment variables:
 * `DD_LOGS_STDOUT`: set it to `yes` to send all logs to stdout and stderr, for them to be processed by Docker.
 * `PROXY_HOST`, `PROXY_PORT`, `PROXY_USER` and `PROXY_PASSWORD` set the proxy configuration.
 * `DD_URL` set the Datadog intake server to send Agent data to (used when [using an agent as a proxy](https://github.com/DataDog/dd-agent/wiki/Proxy-Configuration#using-the-agent-as-a-proxy) )
+* `DD_SITE` set the Datadog region you want the agent to send data to. The values can be `datadoghq.com` or `datadoghq.eu`
 * `NON_LOCAL_TRAFFIC` configures the `non_local_traffic` option in the agent which enables or disables statsd reporting from **any** external ip. You may find this useful to report metrics from your other containers. See [network configuration](https://github.com/DataDog/dd-agent/wiki/Network-Traffic-and-Proxy-Configuration) for more details. This option is set to true by default in the image, and the `docker run` command we provide in the example above disables it. Remove the `-e NON_LOCAL_TRAFFIC=false` part to enable it back. **WARNING** if you allow non-local traffic, make sure your agent container is not accessible from the Internet or other untrusted networks as it would allow anyone to submit metrics to it.
 * `SD_BACKEND`, `SD_CONFIG_BACKEND`, `SD_BACKEND_HOST`, `SD_BACKEND_PORT`, `SD_TEMPLATE_DIR`, `SD_CONSUL_TOKEN`, `SD_BACKEND_USER` and `SD_BACKEND_PASSWORD` configure Autodiscovery (previously known as Service Discovery):
 
