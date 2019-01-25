@@ -1,4 +1,4 @@
-# Datadog Agent 5.x Dockerfile 
+# Datadog Agent 5.x Dockerfile
 
 This repository is meant to build the base image for a Datadog Agent 5.x container. You will have to use the resulting image to configure and run the Agent.  If you are looking for a [Datadog Agent 6.x Dockerfile](https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles), it is available in the [datadog-agent](https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles) repo.
 
