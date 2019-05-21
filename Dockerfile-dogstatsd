@@ -2,7 +2,7 @@ FROM debian:stretch
 
 MAINTAINER Datadog <package@datadoghq.com>
 
-ARG AGENT_VERSION_ARG=1:5.32.2-1
+ARG AGENT_VERSION_ARG=1:5.32.3-1
 ARG AGENT_REPO_ARG=http://apt.datad0g.com/
 ARG AGENT_REPO_CHANNEL_ARG=stable
 
