@@ -1,0 +1,6 @@
+false_positive:
+- id: docker-dd-agent://examples/kafka/kafka.yaml_d4ae834656b9eaab2b457ab0d7b448e92fa4588d
+  justification: 'False positive per GUS W-6565369'
+mock_secret: []
+non_production_secret: []
+production_secret: []
