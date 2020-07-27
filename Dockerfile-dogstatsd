@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster-20200607-slim
 
 MAINTAINER Datadog <package@datadoghq.com>
 
@@ -15,6 +15,9 @@ ENV DOCKER_DD_AGENT=yes \
     PYTHONPATH=/opt/datadog-agent/agent \
     DD_CONF_LOG_TO_SYSLOG=no \
     NON_LOCAL_TRAFFIC=yes
+
+# workaround for stretch-slim missing man dirs
+RUN seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{}
 
 # Install the Agent
 RUN apt-get update \
