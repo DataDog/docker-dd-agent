@@ -1,4 +1,4 @@
-FROM debian:buster-20200607-slim
+FROM debian:buster-20200803-slim
 
 MAINTAINER Datadog <package@datadoghq.com>
 
