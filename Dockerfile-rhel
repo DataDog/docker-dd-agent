@@ -3,7 +3,7 @@ MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
     DD_LOGS_STDOUT=yes \
-    AGENT_VERSION=5.26.0-1 \
+    AGENT_VERSION=5.32.8-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
@@ -15,7 +15,7 @@ ENV DOCKER_DD_AGENT=yes \
 LABEL name="datadog/docker-dd-agent:latest-rhel" \
       vendor="Datadog" \
       version="${AGENT_VERSION}" \
-      release="" \
+      release="${AGENT_VERSION}" \
       summary="A containerized version of the Datadog Agent." \
       description="The Datadog Agent provides real-time performance tracking and visualization of your operating system and application metrics." \
       url="https://www.datadoghq.com" \
