@@ -3,7 +3,7 @@ MAINTAINER Datadog <package@datadoghq.com>
 
 ENV DOCKER_DD_AGENT=yes \
     DD_LOGS_STDOUT=yes \
-    AGENT_VERSION=5.32.7-1 \
+    AGENT_VERSION=5.32.8-1 \
     DD_ETC_ROOT=/etc/dd-agent \
     PATH="/opt/datadog-agent/embedded/bin:/opt/datadog-agent/bin:${PATH}" \
     PYTHONPATH=/opt/datadog-agent/agent \
