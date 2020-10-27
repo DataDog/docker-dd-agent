@@ -37,6 +37,12 @@ stderr_logfile=\/dev\/stderr\
 stderr_logfile_maxbytes=0' ${DD_ETC_ROOT}/supervisor.conf
 fi
 
+##### Trace Agent config #####
+if [ ! "${DD_TRACE_CONF_ENV}" = "" ]; then
+  sed -i -e '$ a [trace.config]' ${DD_ETC_ROOT}/datadog.conf
+  sed -i -e "$ a env = ${DD_TRACE_CONF_ENV}" ${DD_ETC_ROOT}/datadog.conf
+fi
+
 ##### Integrations config #####
 
 if [ $KUBERNETES ]; then
