@@ -1,6 +1,6 @@
-FROM debian:buster-20200803-slim
+FROM artifact.onwalk.net/public/debian-slim:latest 
 
-MAINTAINER Datadog <package@datadoghq.com>
+MAINTAINER Haitao Pan <manbuzhe2009@qq.com>
 
 ARG AGENT_VERSION_ARG=1:5.32.7-1
 ARG AGENT_REPO_ARG=http://apt.datad0g.com/

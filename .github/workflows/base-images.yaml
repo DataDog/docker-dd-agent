@@ -1,0 +1,26 @@
+name: Build & push apline-awscli-python3 image
+on:
+  pull_request:
+  push:
+    paths:
+      - '.github/workflows/base-images.yaml'
+    branches:
+      - main
+
+jobs:
+  datadog-agent:
+    runs-on: ubuntu-latest
+    name: Build datadog-agent image
+    steps:
+      - uses: actions/checkout@master
+
+      - name: 'Artifact: build && push datadog agent image'
+        uses: aevea/action-kaniko@master
+        with:
+          registry: artifact.onwalk.net
+          username: admin 
+          password: ${{ secrets.HELM_REPO_PASSWORD }}
+          image: public/datadog-agent
+          tag: latest
+          cache: true
+          cache_registry: cache
