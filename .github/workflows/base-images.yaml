@@ -3,6 +3,7 @@ on:
   pull_request:
   push:
     paths:
+      - 'Dockerfile'
       - '.github/workflows/base-images.yaml'
     branches:
       - main
